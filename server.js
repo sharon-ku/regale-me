@@ -13,8 +13,8 @@ app.use('/varsToMongo',handleGetVars);
 
 const url = process.env.MONGODB_URI;
 console.log(url);
-const PhoneUseModel = require("./DBSchema.js");
-const GooglePlayAppModel = require("./DBGooglePlaySchema.js");
+// const PhoneUseModel = require("./DBSchema.js");
+// const GooglePlayAppModel = require("./DBGooglePlaySchema.js");
 
 // connect to db
 mongoose.connect(url);
@@ -23,57 +23,57 @@ let db = mongoose.connection;
 db.once("open", async function () {
   console.log("are here");
 
-  // Query all entries with App as Insta and specific Date, and output only the App entries
-  // PhoneUseModel.find({App:"Instagram", Date:"08/26/2022"}, "App").then((result) => {
-  //   console.log(result);
-  // })
+  // // Query all entries with App as Insta and specific Date, and output only the App entries
+  // // PhoneUseModel.find({App:"Instagram", Date:"08/26/2022"}, "App").then((result) => {
+  // //   console.log(result);
+  // // })
 
-  // Count how many Insta users there are
-  // let numInstagramUsers = await GooglePlayAppModel.countDocuments({App:"Instagram"});
-  // console.log(numInstagramUsers);
+  // // Count how many Insta users there are
+  // // let numInstagramUsers = await GooglePlayAppModel.countDocuments({App:"Instagram"});
+  // // console.log(numInstagramUsers);
 
 
-  // GooglePlayAppModel.find({Category:"ART_AND_DESIGN"}, "App").then((result) => {
-  //   console.log(result);
-  // })
+  // // GooglePlayAppModel.find({Category:"ART_AND_DESIGN"}, "App").then((result) => {
+  // //   console.log(result);
+  // // })
 
-  // START HERE FOR QUERIES:
+  // // START HERE FOR QUERIES:
   
-  // #1: Query all entries of Category art and design, with >= 4 rating, and has >= 10000 reviews, then output name of app
-  let numResults = await GooglePlayAppModel.countDocuments({Category:"ART_AND_DESIGN", Rating: { $gte: 4 }, Reviews: { $gte: 10000}});
-  console.log(numResults);
-  GooglePlayAppModel.find({Category:"ART_AND_DESIGN", Rating: { $gte: 4 }, Reviews: { $gte: 10000}}, "App").then((result) => {
-    console.log(result);
-  })
-
-  // #2: Find all Beauty category apps with >=4 rating and has >= 1000 reviews
-  // let numResults = await GooglePlayAppModel.countDocuments({Category:"BEAUTY", Rating: { $gte: 4 }, Reviews: { $gte: 1000}});
+  // // #1: Query all entries of Category art and design, with >= 4 rating, and has >= 10000 reviews, then output name of app
+  // let numResults = await GooglePlayAppModel.countDocuments({Category:"ART_AND_DESIGN", Rating: { $gte: 4 }, Reviews: { $gte: 10000}});
   // console.log(numResults);
-  // GooglePlayAppModel.find({Category:"BEAUTY", Rating: { $gte: 4 }, Reviews: { $gte: 1000}}).then((result) => {
+  // GooglePlayAppModel.find({Category:"ART_AND_DESIGN", Rating: { $gte: 4 }, Reviews: { $gte: 10000}}, "App").then((result) => {
   //   console.log(result);
   // })
+
+  // // #2: Find all Beauty category apps with >=4 rating and has >= 1000 reviews
+  // // let numResults = await GooglePlayAppModel.countDocuments({Category:"BEAUTY", Rating: { $gte: 4 }, Reviews: { $gte: 1000}});
+  // // console.log(numResults);
+  // // GooglePlayAppModel.find({Category:"BEAUTY", Rating: { $gte: 4 }, Reviews: { $gte: 1000}}).then((result) => {
+  // //   console.log(result);
+  // // })
   
 
-  // #3: Find apps with review less than 1 star, and has at least 1000 reviews
-  // let numResults = await GooglePlayAppModel.countDocuments({Rating: { $lte: 1 }, Reviews: { $gte: 1000}});
-  // console.log(numResults);
-  // GooglePlayAppModel.find({Rating: { $lte: 1 }, Reviews: { $gte: 1000}}).then((result) => {
-  //   console.log(result);
-  // })
+  // // #3: Find apps with review less than 1 star, and has at least 1000 reviews
+  // // let numResults = await GooglePlayAppModel.countDocuments({Rating: { $lte: 1 }, Reviews: { $gte: 1000}});
+  // // console.log(numResults);
+  // // GooglePlayAppModel.find({Rating: { $lte: 1 }, Reviews: { $gte: 1000}}).then((result) => {
+  // //   console.log(result);
+  // // })
 
-  // #4: Books and reference apps with at least 4 stars and at least 10000 reviews, and output app name
-  // let numResults = await GooglePlayAppModel.countDocuments({Category:"BOOKS_AND_REFERENCE", Rating: { $gte: 4}, Reviews: { $gte: 10000}});
-  // console.log(numResults);
-  // GooglePlayAppModel.find({Category:"BOOKS_AND_REFERENCE", Rating: { $gte: 4}, Reviews: { $gte: 10000}}, "App").then((result) => {
-  //   console.log(result);
-  // })
+  // // #4: Books and reference apps with at least 4 stars and at least 10000 reviews, and output app name
+  // // let numResults = await GooglePlayAppModel.countDocuments({Category:"BOOKS_AND_REFERENCE", Rating: { $gte: 4}, Reviews: { $gte: 10000}});
+  // // console.log(numResults);
+  // // GooglePlayAppModel.find({Category:"BOOKS_AND_REFERENCE", Rating: { $gte: 4}, Reviews: { $gte: 10000}}, "App").then((result) => {
+  // //   console.log(result);
+  // // })
 
-  // #5: Find apps with 5 stars, and has at least 50 reviews
-  // let numResults = await GooglePlayAppModel.countDocuments({Rating: { $gte: 5 }, Reviews: { $gte: 50}});
-  // console.log(numResults);
-  // GooglePlayAppModel.find({Rating: { $gte: 5 }, Reviews: { $gte: 50}}).then((result) => {
-  //   console.log(result);
-  // })
+  // // #5: Find apps with 5 stars, and has at least 50 reviews
+  // // let numResults = await GooglePlayAppModel.countDocuments({Rating: { $gte: 5 }, Reviews: { $gte: 50}});
+  // // console.log(numResults);
+  // // GooglePlayAppModel.find({Rating: { $gte: 5 }, Reviews: { $gte: 50}}).then((result) => {
+  // //   console.log(result);
+  // // })
 
 
 });
@@ -113,8 +113,8 @@ async function  handleGetVars  (request,response,next){
   console.log(request.query.paramOne);
   // response.send("SUCCESS GET");
 
-  let results = await GooglePlayAppModel.find({App:request.query.paramOne});
-  console.log(results[0]);
-  response.send(results);
+  // let results = await GooglePlayAppModel.find({App:request.query.paramOne});
+  // console.log(results[0]);
+  // response.send(results);
 }
 
