@@ -1,0 +1,24 @@
+{
+  "name": "regale-me",
+  "version": "1.0.0",
+  "description": "Collaborative storytelling in a cozy autumn environment",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sharon-ku/regale-me.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sharon-ku/regale-me/issues"
+  },
+  "homepage": "https://github.com/sharon-ku/regale-me#readme"
+}
