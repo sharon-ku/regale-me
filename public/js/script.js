@@ -32,6 +32,24 @@ document.body.appendChild(app.view);
 // // Add it to the stage
 // app.stage.addChild(rect);
 
+/********************************
+ * BOOK SETUP
+********************************/
+let book = new PIXI.Graphics()
+    .beginFill(0xffffff);
+
+
+book.drawRect(app.screen.width / 2, app.screen.height / 2, 800, 500);
+// center the sprite's anchor point
+// book.anchor.set(0.5);
+// book.x = app.screen.width / 2;
+// book.y = app.screen.height / 2;
+book.pivot.x = book.width / 2;
+book.pivot.y = book.height / 2;
+// // Add it to the stage
+app.stage.addChild(book);
+
+
 
 /********************************
  * RESIZE DOCUMENT AUTOMATICALLY
@@ -50,7 +68,8 @@ function resize() {
     // You can use the 'screen' property as the renderer visible
     // area, this is more useful than view.width/height because
     // it handles resolution
-    rect.position.set(app.screen.width, app.screen.height);
+    // rect.position.set(app.screen.width, app.screen.height);
+    // book.position.set(app.screen.width, app.screen.height);
 }
 
 resize();
