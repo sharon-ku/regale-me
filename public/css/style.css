@@ -4,3 +4,10 @@ Here is a description of any special CSS used.
 By default that's nothing.
 
 **********************************************/
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
