@@ -1,3 +1,14 @@
+/****************************************
+MongoDB set up
+*****************************************/
+// Get modules
+const Book = require("./Book.js");
+
+
+
+/****************************************
+Node set up
+*****************************************/
 const express = require("express");
 const portNumber = 4200;
 const app = express(); //make an instance of express
@@ -8,11 +19,12 @@ const mongoose = require("mongoose");
 let bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-app.use('/varsToMongo',handleGetVars);
+app.use('/varsToMongo', handleGetVars);
 
 
 const url = process.env.MONGODB_URI;
 console.log(url);
+
 // const PhoneUseModel = require("./DBSchema.js");
 // const GooglePlayAppModel = require("./DBGooglePlaySchema.js");
 
@@ -38,7 +50,7 @@ db.once("open", async function () {
   // // })
 
   // // START HERE FOR QUERIES:
-  
+
   // // #1: Query all entries of Category art and design, with >= 4 rating, and has >= 10000 reviews, then output name of app
   // let numResults = await GooglePlayAppModel.countDocuments({Category:"ART_AND_DESIGN", Rating: { $gte: 4 }, Reviews: { $gte: 10000}});
   // console.log(numResults);
@@ -52,7 +64,7 @@ db.once("open", async function () {
   // // GooglePlayAppModel.find({Category:"BEAUTY", Rating: { $gte: 4 }, Reviews: { $gte: 1000}}).then((result) => {
   // //   console.log(result);
   // // })
-  
+
 
   // // #3: Find apps with review less than 1 star, and has at least 1000 reviews
   // // let numResults = await GooglePlayAppModel.countDocuments({Rating: { $lte: 1 }, Reviews: { $gte: 1000}});
@@ -96,10 +108,10 @@ function clientRoute(req, res, next) {
 }
 
 /// use this VERB for getting posted data... 9
-app.post('/postForm',handlePost);
- 
+app.post('/postForm', handlePost);
+
 // the callback
-function handlePost(request,response){
+function handlePost(request, response) {
   console.log(request.body);
   response.send("SUCCESS POST");
 
@@ -108,7 +120,7 @@ function handlePost(request,response){
 }
 
 //EXAMPLE of  user making a query ... 10
-async function  handleGetVars  (request,response,next){
+async function handleGetVars(request, response, next) {
   console.log(request.url);
   console.log(request.query.paramOne);
   // response.send("SUCCESS GET");
