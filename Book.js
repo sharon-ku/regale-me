@@ -7,13 +7,17 @@ let Schema = mongoose.Schema;
 
 let bookSchema = new Schema({
     title: String,
-    x: Number,
-    y: Number,
-    active: Boolean,
+    complete: Boolean,
+    currentlyEditing: Boolean,
+    cover: {
+        color: String,
+        type: String
+    },
+    pages: [],
 });
 
 // Create a model
 // Compile model from schema (model we need to use)
-let Book = mongoose.model("Book", bookSchema);
+let Book = mongoose.model("books", bookSchema);
 
 module.exports = Book;

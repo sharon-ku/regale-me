@@ -27,15 +27,43 @@ body {
     align-items: center;
 }
 
-#left-page {
-    background: green;
+.page {
     width: 400px;
     height: 500px;
+}
+
+#left-page {
+    background: red;
 
 }
 
 #right-page {
     background: orange;
-    width: 400px;
-    height: 500px;
+}
+
+#book-arrows {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.arrow-buttons {
+    all: unset;
+    cursor: pointer;
+}
+
+#left-arrow {
+    margin-left: 10vw;
+}
+
+#right-arrow {
+    margin-right: 10vw;
+}
+
+#left-arrow img:hover,
+#right-arrow img:hover {
+    width: 90px;
 }

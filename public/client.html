@@ -15,21 +15,35 @@
   <!-- Library for rendering interactive graphics -->
   <!-- Source: https://pixijs.download/release/docs/index.html -->
   <script src="js/libraries/pixi.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
+  <!-- The book -->
   <section id="book-container">
     <!-- <section id="cover-page">
       <h1 id="book-title">Book Title</h1>
     </section> -->
-    <section id="left-page">
+    <section id="left-page" class="page">
       <h3 class="prompt">prompt test</h3>
       <p class="pageText">Once Upon a Time, there was a ...</p>
     </section>
-    <section id="right-page">
+    <section id="right-page" class="page">
       <h3 class="prompt">prompt test</h3>
       <p class="pageText">Then this happened and this happened...</p>
     </section>
+  </section>
+
+  <!-- Book arrows to flip pages -->
+  <section id="book-arrows">
+    <button id="left-arrow" class="arrow-buttons">
+      <img src="assets/images/left-arrow.png" alt="left arrow button">
+    </button>
+
+    <button id="right-arrow" class="arrow-buttons">
+      <img src="assets/images/right-arrow.png" alt="right arrow button">
+    </button>
   </section>
 
 
