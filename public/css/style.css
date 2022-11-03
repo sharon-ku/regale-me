@@ -11,3 +11,31 @@ By default that's nothing.
     padding: 0;
     box-sizing: border-box;
 }
+
+body {
+    overflow: hidden;
+}
+
+
+#book-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    /* background: red; */
+    justify-content: center;
+    align-items: center;
+}
+
+#left-page {
+    background: green;
+    width: 400px;
+    height: 500px;
+
+}
+
+#right-page {
+    background: orange;
+    width: 400px;
+    height: 500px;
+}

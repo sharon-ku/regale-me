@@ -33,7 +33,7 @@ document.body.appendChild(app.view);
 // app.stage.addChild(rect);
 
 /********************************
- * BOOK SETUP
+ * PIXI BOOK SETUP
 ********************************/
 let book = new PIXI.Graphics()
     .beginFill(0xffffff);
@@ -48,6 +48,10 @@ book.pivot.x = book.width / 2;
 book.pivot.y = book.height / 2;
 // // Add it to the stage
 app.stage.addChild(book);
+
+/********************************
+ * BOOK DOM SETUP
+********************************/
 
 
 
@@ -68,8 +72,8 @@ function resize() {
     // You can use the 'screen' property as the renderer visible
     // area, this is more useful than view.width/height because
     // it handles resolution
-    // rect.position.set(app.screen.width, app.screen.height);
-    // book.position.set(app.screen.width, app.screen.height);
+    // Fix book position to middle of page
+    book.position.set(app.screen.width, app.screen.height);
 }
 
 resize();
