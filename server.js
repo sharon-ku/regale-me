@@ -13,6 +13,11 @@ const express = require("express");
 const portNumber = 4200;
 const app = express(); //make an instance of express
 const server = require("http").createServer(app);
+
+// create a server (using the Express framework object)
+// declare io which mounts to our httpServer object (runs on top ... )
+let io = require("socket.io")(server);
+
 require("dotenv").config();
 const mongoose = require("mongoose");
 
