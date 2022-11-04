@@ -111,19 +111,19 @@ function setup() {
 
 
         // create books
-        for (let i = 0; i < results.length; i++) {
-            console.log(results[i]);
-            // keep some distance from borders
+        // for (let i = 0; i < results.length; i++) {
+        //     console.log(results[i]);
+        //     // keep some distance from borders
 
-            //   let x = results[i].x;
-            //   let y = results[i].y;
-            //   let image = random(podImages);
-            //   let taken = results[i].taken;
+        //     //   let x = results[i].x;
+        //     //   let y = results[i].y;
+        //     //   let image = random(podImages);
+        //     //   let taken = results[i].taken;
 
-            //   // resize canvas to windowWidth and windowHeight
-            //   let pod = new Greenhouse(x, y, image, windowWidth, windowHeight, taken);
-            //   pods.push(pod);
-        }
+        //     //   // resize canvas to windowWidth and windowHeight
+        //     //   let pod = new Greenhouse(x, y, image, windowWidth, windowHeight, taken);
+        //     //   pods.push(pod);
+        // }
 
         // Request the user greenhouse positions to be found
         // clientSocket.emit("getUserPodPositions");

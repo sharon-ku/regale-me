@@ -21,10 +21,10 @@
 
 <body>
   <!-- The book -->
-  <section id="book-container">
-    <!-- <section id="cover-page">
+  <!-- <section id="book-container">
+    <section id="cover-page">
       <h1 id="book-title">Book Title</h1>
-    </section> -->
+    </section>
     <section id="left-page" class="page">
       <h3 class="prompt">prompt test</h3>
       <p class="pageText">Once Upon a Time, there was a ...</p>
@@ -33,10 +33,74 @@
       <h3 class="prompt">prompt test</h3>
       <p class="pageText">Then this happened and this happened...</p>
     </section>
-  </section>
+  </section> -->
+
+  <!-- PAGE FLIPPING: TUTORIAL STARTS HERE -->
+  <!-- https://www.youtube.com/watch?v=A5fdu8HZKic -->
+  <div class="book">
+    <input type="checkbox" id="c1">
+    <input type="checkbox" id="c2">
+    <input type="checkbox" id="c3">
+    <div id="cover"><img src="assets/images/page-cover.png" alt="cover page"></div>
+
+    <div class="flip-book">
+      <div class="flip" id="p1">
+        <div class="back">
+          <h2>back1</h2>
+          <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem sequi ut, totam temporibus eveniet
+            aliquam officiis quasi laboriosam dolor eligendi sit! Corrupti dicta nulla non, harum blanditiis vero iusto
+            sapiente?</p>
+          <!-- <img src="assets/images/page-left.png" alt=""> -->
+          <label for="c1" class="back-btn">Back</label>
+
+        </div>
+        <div class="front">
+          <h2>Apple</h2>
+          <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem sequi ut, totam temporibus eveniet
+            aliquam officiis quasi laboriosam dolor eligendi sit! Corrupti dicta nulla non, harum blanditiis vero iusto
+            sapiente?</p>
+          <label for="c1" class="next-btn">Next</label>
+        </div>
+      </div>
+
+      <div class="flip" id="p2">
+        <div class="back">
+          <img src="assets/images/page-right.png" alt="">
+          <label for="c2" class="back-btn">Back</label>
+
+        </div>
+        <div class="front">
+          <h2>Strawberry</h2>
+          <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem sequi ut, totam temporibus eveniet
+            aliquam officiis quasi laboriosam dolor eligendi sit! Corrupti dicta nulla non, harum blanditiis vero iusto
+            sapiente?</p>
+          <label for="c2" class="next-btn">Next</label>
+        </div>
+      </div>
+
+      <div class="flip" id="p3">
+        <div class="back">
+          <img src="assets/images/page-back.png" alt="">
+          <label for="c3" class="back-btn">Back</label>
+
+        </div>
+        <div class="front">
+          <h2>Pineapple</h2>
+          <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem sequi ut, totam temporibus eveniet
+            aliquam officiis quasi laboriosam dolor eligendi sit! Corrupti dicta nulla non, harum blanditiis vero iusto
+            sapiente?</p>
+          <label for="c3" class="next-btn">Next</label>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+  <!-- PAGE FLIPPING TUTORIAL ENDS HERE -->
 
   <!-- Book arrows to flip pages -->
-  <section id="book-arrows">
+  <!-- <section id="book-arrows">
     <button id="left-arrow" class="arrow-buttons">
       <img src="assets/images/left-arrow.png" alt="left arrow button">
     </button>
@@ -44,7 +108,7 @@
     <button id="right-arrow" class="arrow-buttons">
       <img src="assets/images/right-arrow.png" alt="right arrow button">
     </button>
-  </section>
+  </section> -->
 
 
 
