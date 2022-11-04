@@ -100,7 +100,97 @@ function setup() {
 
     // display books from database
     clientSocket.on("newBooks", function (firstBook) {
-        // fill up book content
+
+        let numSets = Math.ceil(firstBook.pages.length / 2);
+        console.log(numSets);
+
+        for (let i = 0; i < numSets; i++) {
+            $(`<input type="checkbox" id="c${i + 1}">`).insertBefore(".flip-book");
+            console.log(`added checkbox`);
+        }
+
+        $(".flip-book").append(`
+        <div class="flip" id="p1">
+          <div class="front">
+            <h2 class="prompt">Apple</h2>
+            <p class="pageText">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem sequi ut, totam
+              temporibus eveniet
+              aliquam officiis quasi laboriosam dolor eligendi sit! Corrupti dicta nulla non, harum blanditiis vero iusto
+              sapiente?</p>
+            <label for="c1" class="next-btn">Next</label>
+          </div>
+  
+          <div class="back">
+            <h2 class="prompt">back1</h2>
+            <p class="pageText">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem sequi ut, totam
+              temporibus eveniet
+              aliquam officiis quasi laboriosam dolor eligendi sit! Corrupti dicta nulla non, harum blanditiis vero iusto
+              sapiente?</p>
+  
+            <label for="c1" class="back-btn">Back</label>
+          </div>
+  
+  
+        </div>
+  
+        <div class="flip" id="p2">
+          <div class="front">
+            <h2 class="prompt">Strawberry</h2>
+            <p class="pageText">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem sequi ut, totam
+              temporibus eveniet
+              aliquam officiis quasi laboriosam dolor eligendi sit! Corrupti dicta nulla non, harum blanditiis vero iusto
+              sapiente?</p>
+            <label for="c2" class="next-btn">Next</label>
+          </div>
+  
+          <div class="back">
+            <h2 class="prompt">back2</h2>
+            <p class="pageText">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem sequi ut, totam
+              temporibus eveniet
+              aliquam officiis quasi laboriosam dolor eligendi sit! Corrupti dicta nulla non, harum blanditiis vero iusto
+              sapiente?</p>
+            <label for="c2" class="back-btn">Back</label>
+          </div>
+        </div>
+  
+        <div class="flip" id="p3">
+          <div class="front">
+            <h2 class="prompt">Pineapple</h2>
+            <p class="pageText">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem sequi ut, totam
+              temporibus eveniet
+              aliquam officiis quasi laboriosam dolor eligendi sit! Corrupti dicta nulla non, harum blanditiis vero iusto
+              sapiente?</p>
+            <label for="c3" class="next-btn">Next</label>
+          </div>
+  
+          <div class="back">
+            <h2 class="prompt">back3</h2>
+            <p class="pageText">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatem sequi ut, totam
+              temporibus eveniet
+              aliquam officiis quasi laboriosam dolor eligendi sit! Corrupti dicta nulla non, harum blanditiis vero iusto
+              sapiente?</p>
+     
+            <label for="c3" class="back-btn">Back</label>
+          </div>
+        </div>
+  
+        
+        `);
+
+
+        // Create correct number of pages
+        for (let i = 0; i < firstBook.pages.length; i++) {
+            // If it's an even-number page
+            if (i % 2 == 0) {
+
+            } else {
+                // Put on back page (odd-number page)
+
+            }
+        }
+
+
+        // Grab book content from Mongo
         for (let i = 0; i < firstBook.pages.length; i++) {
             // If it's an even-number page
             if (i % 2 == 0) {
@@ -111,8 +201,43 @@ function setup() {
                 $(`#p${(i / 2) + 0.5}>.back>.prompt`).text(firstBook.pages[i].prompt);
                 $(`#p${(i / 2) + 0.5}>.back>.pageText`).text(firstBook.pages[i].pageText);
             }
-
         }
+
+        /********************************
+ * HANDLE PAGE FLIPPING
+********************************/
+        // numPages will be number of dB pages
+        // let numPages = 6;
+        // numSheets = Math.ceil(numPages / 2)
+        let numSheets = 3;
+
+        setPageZIndex();
+
+        // Set initial z-index of all pages
+        function setPageZIndex() {
+            for (let i = 1; i < numSheets + 1; i++) {
+                $(`#p${i}`).css({ "z-index": `${(numSheets + 1) - i}` });
+            }
+        }
+
+        // Flip pages by changing CSS
+        for (let i = 1; i < numSheets + 1; i++) {
+            $(`#c${i}`).change(function () {
+                // If page is flipped forward
+                if (this.checked) {
+
+                    $(`#c${i}:checked~.flip-book>#p${i}`).css({ "transform": "rotateY(-180deg)", "z-index": `${i}` });
+                } else {
+                    // If page is flipped backward
+                    $(`.flip-book>#p${i}`).css({ "transform": "" });
+
+                    // Reset z-index of that specific page
+                    $(`#p${i}`).css({ "z-index": `${(numSheets + 1) - i}` });
+                }
+            });
+        }
+
+
 
         // // fill up book content
         // // left page
@@ -145,39 +270,39 @@ function setup() {
 
 }
 
-/********************************
- * HANDLE PAGE FLIPPING
-********************************/
-// numPages will be number of dB pages
-let numPages = 6;
-// numSheets = Math.ceil(numPages / 2)
-let numSheets = 3;
+// /********************************
+//  * HANDLE PAGE FLIPPING
+// ********************************/
+// // numPages will be number of dB pages
+// // let numPages = 6;
+// // numSheets = Math.ceil(numPages / 2)
+// let numSheets = 3;
 
-setPageZIndex();
+// setPageZIndex();
 
-// Set initial z-index of all pages
-function setPageZIndex() {
-    for (let i = 1; i < numSheets + 1; i++) {
-        $(`#p${i}`).css({ "z-index": `${(numSheets + 1) - i}` });
-    }
-}
+// // Set initial z-index of all pages
+// function setPageZIndex() {
+//     for (let i = 1; i < numSheets + 1; i++) {
+//         $(`#p${i}`).css({ "z-index": `${(numSheets + 1) - i}` });
+//     }
+// }
 
-// Flip pages by changing CSS
-for (let i = 1; i < numSheets + 1; i++) {
-    $(`#c${i}`).change(function () {
-        // If page is flipped forward
-        if (this.checked) {
+// // Flip pages by changing CSS
+// for (let i = 1; i < numSheets + 1; i++) {
+//     $(`#c${i}`).change(function () {
+//         // If page is flipped forward
+//         if (this.checked) {
 
-            $(`#c${i}:checked~.flip-book>#p${i}`).css({ "transform": "rotateY(-180deg)", "z-index": `${i}` });
-        } else {
-            // If page is flipped backward
-            $(`.flip-book>#p${i}`).css({ "transform": "" });
+//             $(`#c${i}:checked~.flip-book>#p${i}`).css({ "transform": "rotateY(-180deg)", "z-index": `${i}` });
+//         } else {
+//             // If page is flipped backward
+//             $(`.flip-book>#p${i}`).css({ "transform": "" });
 
-            // Reset z-index of that specific page
-            $(`#p${i}`).css({ "z-index": `${(numSheets + 1) - i}` });
-        }
-    });
-}
+//             // Reset z-index of that specific page
+//             $(`#p${i}`).css({ "z-index": `${(numSheets + 1) - i}` });
+//         }
+//     });
+// }
 
 
 
