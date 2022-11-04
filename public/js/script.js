@@ -101,13 +101,27 @@ function setup() {
     // display books from database
     clientSocket.on("newBooks", function (firstBook) {
         // fill up book content
-        // left page
-        $(`#left-page>.prompt`).text(firstBook.pages[0].prompt);
-        $(`#left-page>.pageText`).text(firstBook.pages[0].pageText);
+        for (let i = 0; i < firstBook.pages.length; i++) {
+            // If it's an even-number page
+            if (i % 2 == 0) {
+                $(`#p${(i / 2) + 1}>.front>.prompt`).text(firstBook.pages[i].prompt);
+                $(`#p${(i / 2) + 1}>.front>.pageText`).text(firstBook.pages[i].pageText);
+            } else {
+                // Put on back page (odd-number page)
+                $(`#p${(i / 2) + 0.5}>.back>.prompt`).text(firstBook.pages[i].prompt);
+                $(`#p${(i / 2) + 0.5}>.back>.pageText`).text(firstBook.pages[i].pageText);
+            }
 
-        // right page
-        $(`#right-page>.prompt`).text(firstBook.pages[1].prompt);
-        $(`#right-page>.pageText`).text(firstBook.pages[1].pageText);
+        }
+
+        // // fill up book content
+        // // left page
+        // $(`#left-page>.prompt`).text(firstBook.pages[0].prompt);
+        // $(`#left-page>.pageText`).text(firstBook.pages[0].pageText);
+
+        // // right page
+        // $(`#right-page>.prompt`).text(firstBook.pages[1].prompt);
+        // $(`#right-page>.pageText`).text(firstBook.pages[1].pageText);
 
 
         // create books
