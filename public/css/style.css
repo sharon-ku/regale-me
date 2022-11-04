@@ -41,25 +41,33 @@ body {
 }
 
 #book-arrows {
-    display: flex;
+    /* display: flex;
     width: 100%;
     height: 100vh;
     position: fixed;
     justify-content: space-between;
     align-items: center;
+    z-index: -5; */
+    /* position: fixed; */
 }
 
 .arrow-buttons {
     all: unset;
     cursor: pointer;
+
+    /* position: fixed; */
 }
 
 #left-arrow {
-    margin-left: 10vw;
+    /* margin-left: 10vw; */
+    position: fixed;
+    left: 10vw;
 }
 
 #right-arrow {
-    margin-right: 10vw;
+    /* margin-right: 10vw; */
+    position: fixed;
+    right: 10vw;
 }
 
 #left-arrow img:hover,
@@ -169,7 +177,7 @@ p {
     color: #fff;
 }
 
-#p1 {
+/* #p1 {
     z-index: 3;
 }
 
@@ -179,9 +187,9 @@ p {
 
 #p3 {
     z-index: 1;
-}
+} */
 
-#c1:checked~.flip-book #p1 {
+/* #c1:checked~.flip-book #p1 {
     transform: rotateY(-180deg);
     z-index: 1;
 }
@@ -194,4 +202,4 @@ p {
 #c3:checked~.flip-book #p3 {
     transform: rotateY(-180deg);
     z-index: 3;
-}
+} */
