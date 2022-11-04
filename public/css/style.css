@@ -187,9 +187,9 @@ p {
 
 #p3 {
     z-index: 1;
-} */
+}
 
-/* #c1:checked~.flip-book #p1 {
+#c1:checked~.flip-book #p1 {
     transform: rotateY(-180deg);
     z-index: 1;
 }

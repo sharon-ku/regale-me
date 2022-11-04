@@ -139,12 +139,11 @@ let numPages = 6;
 // numSheets = Math.ceil(numPages / 2)
 let numSheets = 3;
 
-resetPageZIndex();
+setPageZIndex();
 
-// Set z-index of pages
-function resetPageZIndex() {
+// Set initial z-index of all pages
+function setPageZIndex() {
     for (let i = 1; i < numSheets + 1; i++) {
-        // console.log(`${(numSheets + 1) - i}`);
         $(`#p${i}`).css({ "z-index": `${(numSheets + 1) - i}` });
     }
 }
@@ -154,17 +153,14 @@ for (let i = 1; i < numSheets + 1; i++) {
     $(`#c${i}`).change(function () {
         // If page is flipped forward
         if (this.checked) {
+
             $(`#c${i}:checked~.flip-book>#p${i}`).css({ "transform": "rotateY(-180deg)", "z-index": `${i}` });
         } else {
             // If page is flipped backward
             $(`.flip-book>#p${i}`).css({ "transform": "" });
 
-            // As long as we haven't reached final page, reset page z index
-            if (i !== numSheets) {
-                // Set z-index of pages
-                resetPageZIndex();
-            }
-
+            // Reset z-index of that specific page
+            $(`#p${i}`).css({ "z-index": `${(numSheets + 1) - i}` });
         }
     });
 }
