@@ -114,27 +114,55 @@ function setup() {
 
       // Grab book content from Mongo
       for (let j = 0; j < firstBook.pages.length; j++) {
-        // If it's an even-number page
-        if (j % 2 == 0) {
-          $(`#p${(j / 2) + 1}`).append(`
-          <div class="front">
-          <h2 class="prompt">${firstBook.pages[j].prompt}</h2>
-          <p class="pageText">${firstBook.pages[j].pageText}</p>
-          <label for="c${(j / 2) + 1}" class="next-btn">Next</label>
-          </div>
-        `);
+        // If it's not the last page:
+        if (j != firstBook.pages.length - 1) {
+          // If it's an even-number page
+          if (j % 2 == 0) {
+            $(`#p${(j / 2) + 1}`).append(`
+            <div class="front">
+            <h2 class="prompt">${firstBook.pages[j].prompt}</h2>
+            <p class="pageText">${firstBook.pages[j].pageText}</p>
+            <label for="c${(j / 2) + 1}" class="next-btn">Next</label>
+            </div>
+          `);
 
-        } else {
-          // Put on back page (odd-number page)
-          $(`#p${(j / 2) + 0.5}`).append(`
-          <div class="back">
-          <h2 class="prompt">${firstBook.pages[j].prompt}</h2>
-          <p class="pageText">${firstBook.pages[j].pageText}</p>
-          <label for="c${(j / 2) + 0.5}" class="back-btn">Back</label>
-          </div>
-        `);
-        }
-      }
+          } else {
+            // Put on back page (odd-number page)
+            $(`#p${(j / 2) + 0.5}`).append(`
+              <div class="back">
+              <h2 class="prompt">${firstBook.pages[j].prompt}</h2>
+              <p class="pageText">${firstBook.pages[j].pageText}</p>
+              <label for="c${(j / 2) + 0.5}" class="back-btn">Back</label>
+              </div>
+            `);
+          } // else odd page end
+        } // if not last page end
+
+        // Else if it's the last page, add prompt plus input field
+        else {
+          // If it's an even-number page
+          if (j % 2 == 0) {
+            $(`#p${(j / 2) + 1}`).append(`
+            <div class="front">
+            <h2 class="prompt">${firstBook.pages[j].prompt}</h2>
+            <textarea class="inputText" placeholder="Continue the story"></textarea>
+            <input type="submit" class="submit-text-button" value="Submit">
+            </div>
+          `);
+
+          } else {
+            // Put on back page (odd-number page)
+            $(`#p${(j / 2) + 0.5}`).append(`
+              <div class="back">
+              <h2 class="prompt">${firstBook.pages[j].prompt}</h2>
+              <textarea class="inputText" placeholder="Continue the story"></textarea>
+              <input type="submit" class="submit-text-button" value="Submit">
+              <label for="c${(j / 2) + 0.5}" class="back-btn">Back</label>
+              </div>
+            `);
+          } // else odd page end
+        } // else last page end
+      } // for grab book end
     } // for each set end
 
 

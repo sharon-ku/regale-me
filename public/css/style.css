@@ -92,7 +92,7 @@ body {
     background: linear-gradient(90deg, #fff 50%, #4a1010 50%);
 }
 
-input {
+input[type="checkbox"] {
     display: none;
 }
 
@@ -203,3 +203,8 @@ p {
     transform: rotateY(-180deg);
     z-index: 3;
 } */
+
+textarea {
+    width: 220px;
+    height: 220px;
+}
