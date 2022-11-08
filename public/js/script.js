@@ -19,7 +19,7 @@ let app = new PIXI.Application({
   transparent: false,
   // width: 999, //640
   // height: 487, //360
-  backgroundColor: 0xbdb6b5,
+  backgroundColor: 0x98A66B,
   width: window.innerWidth,
   height: window.innerHeight,
   autoResize: true,
@@ -145,18 +145,22 @@ function setup() {
             $(`#p${(j / 2) + 1}`).append(`
             <div class="front">
             <h2 class="prompt">${firstBook.pages[j].prompt}</h2>
-            <textarea class="inputText" placeholder="Continue the story"></textarea>
-            <input type="submit" class="submit-text-button" value="Submit">
+            <form id="message-form" action="">
+              <textarea class="inputText" name="inputText" form="message-form" placeholder="Continue the story" required></textarea>
+              <input type="submit" id="submit-text-button" value="Submit">
+            </form>
             </div>
           `);
 
           } else {
-            // Put on back page (odd-number page)
+            // Put on back page(odd - number page)
             $(`#p${(j / 2) + 0.5}`).append(`
               <div class="back">
               <h2 class="prompt">${firstBook.pages[j].prompt}</h2>
-              <textarea class="inputText" placeholder="Continue the story"></textarea>
-              <input type="submit" class="submit-text-button" value="Submit">
+              <form id="message-form" action="">
+                <textarea class="inputText" name="inputText" form="message-form" placeholder="Continue the story" required></textarea>
+                <input type="submit" id="submit-text-button" value="Submit">
+              </form>
               <label for="c${(j / 2) + 0.5}" class="back-btn">Back</label>
               </div>
             `);
@@ -164,6 +168,34 @@ function setup() {
         } // else last page end
       } // for grab book end
     } // for each set end
+
+
+    // submit message
+    $("#submit-text-button").click(function () {
+      event.preventDefault();
+      // console.log(`first thing ` + $("#message-form")[0]);
+      let closeMessageForm = new FormData($("#message-form")[0]);
+
+      console.log(closeMessageForm);
+
+      let inputText = {};
+
+      // Display the key/value pairs
+      for (var pair of closeMessageForm.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+        inputText[pair[0]] = pair[1];
+      }
+
+      console.log(inputText);
+
+      clientSocket.emit(`sendMessage`, {
+        pageText: inputText,
+      });
+
+      // deletes text in search bar
+      document.getElementById(`message-form`).reset();
+      // $("#messageBox").empty();
+    });
 
 
 

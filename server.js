@@ -84,6 +84,9 @@ function handlePost(request, response) {
 
 }
 
+// For testing purposes, I will only fetch first book of Books DB
+let firstBook;
+
 /*** THIS ONLY HAPPENS ONCE A CLIENT HAS SUCCESSFULLY LOGGED IN *****/
 io.on("connect", newConnection);
 
@@ -103,10 +106,15 @@ function newConnection(socket) {
     console.log("showing data");
 
     Book.find({}).then((result) => {
-      let firstBook = result[0];
+      firstBook = result[0];
       socket.emit("newBooks", firstBook);
-
     })
+
+    // Book.find({ "_id": firstBook._id, "pages.pageText": "" }).then((result) => {
+    //   result.forEach((book) => {
+    //     console.log("books info" + book);
+    //   });
+    // });
 
 
 
@@ -117,6 +125,80 @@ function newConnection(socket) {
     //   socket.emit("newBooks", result);
     // });
   });
+
+  // send messages to database
+  socket.on("sendMessage", function (data) {
+    let textToSave = data.pageText.inputText;
+    console.log(`logged message` + textToSave);
+
+    Book.find({}).then((result) => {
+      firstBook = result[0];
+      console.log(firstBook._id);
+
+      Book.find({ "_id": firstBook._id, "pages.pageText": "" }).then((result) => {
+        let emptyPage = result[0];
+        console.log(`empty page` + emptyPage);
+      })
+
+      // db.books.insertOne({ _id: 1, scores: [44, 78, 38, 80] });
+
+
+
+      // const query = { "pages.pageText": "" };
+      // const updateDocument = {
+      //   $set: { "pages[firstBook.pages.length-1].pageText": textToSave }
+      // };
+      // const updateDb = await Book.updateOne(query, updateDocument);
+
+      Book.updateOne(
+        { "pages.pageText": "" },
+        { $set: { "pages.$.pageText": textToSave } }
+      )
+
+      // create a new message entry in database
+      const book = new Book({
+        title: `another book`,
+        complete: false,
+        currentlyEditing: true,
+        cover: {
+          color: `red`,
+          type: `big`
+        },
+        pages: [],
+      });
+
+
+      book.save().then((result) => {
+        console.log("done");
+      });
+    })
+
+
+
+
+
+    // // find all plant data
+    // Plant.findOne({ _id: plant._id }).then((plantResult) => {
+    //   // find user data
+    //   User.findOne({ _id: plantResult.userId }).then((userResult) => {
+    //     // create a new message entry in database
+    //     const message = new Message({
+    //       receiverId: userResult._id,
+    //       receiverUsername: userResult.username,
+    //       senderId: userDB.id,
+    //       senderUsername: userDB.username,
+    //       plantId: plantResult._id,
+    //       readState: false,
+    //       message: messageToSend.message,
+    //     });
+
+    //     // save to database
+    //     message.save().then((result) => {});
+    //   }); //user findOne
+    // }); //plant findOne
+
+  }); //socket on sendMessage
+
 
 } //newConnection end
 
