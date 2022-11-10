@@ -109,21 +109,6 @@ function newConnection(socket) {
       firstBook = result[0];
       socket.emit("newBooks", firstBook);
     })
-
-    // Book.find({ "_id": firstBook._id, "pages.pageText": "" }).then((result) => {
-    //   result.forEach((book) => {
-    //     console.log("books info" + book);
-    //   });
-    // });
-
-
-
-    // Book.find({}).then((result) => {
-    //   result.forEach((book) => {
-    //     console.log(book);
-    //   });
-    //   socket.emit("newBooks", result);
-    // });
   });
 
   // send messages to database
@@ -131,49 +116,27 @@ function newConnection(socket) {
     let textToSave = data.pageText.inputText;
     console.log(`logged message` + textToSave);
 
-    Book.find({}).then((result) => {
-      firstBook = result[0];
-      console.log(firstBook._id);
+    Book.findOne({}).then((result) => {
+      firstBook = result;
+      console.log(firstBook);
 
-      Book.find({ "_id": firstBook._id, "pages.pageText": "" }).then((result) => {
-        let emptyPage = result[0];
-        console.log(`empty page` + emptyPage);
-      })
+      console.log(firstBook.pages[firstBook.pages.length - 1]);
 
-      // db.books.insertOne({ _id: 1, scores: [44, 78, 38, 80] });
+      // Update pageText
+      firstBook.pages[firstBook.pages.length - 1].pageText = textToSave;
+      console.log(firstBook.pages[firstBook.pages.length - 1]);
 
+      // Save pageText in Mongo
+      Book.updateOne({ _id: firstBook._id },
+        { pages: firstBook.pages }).then((result) => {
+          console.log(`saved page information`);
+        }
+        )
 
+      // For later when I want to add to array
+      // firstBook.pages.push()
 
-      // const query = { "pages.pageText": "" };
-      // const updateDocument = {
-      //   $set: { "pages[firstBook.pages.length-1].pageText": textToSave }
-      // };
-      // const updateDb = await Book.updateOne(query, updateDocument);
-
-      Book.updateOne(
-        { "pages.pageText": "" },
-        { $set: { "pages.$.pageText": textToSave } }
-      )
-
-      // create a new message entry in database
-      const book = new Book({
-        title: `another book`,
-        complete: false,
-        currentlyEditing: true,
-        cover: {
-          color: `red`,
-          type: `big`
-        },
-        pages: [],
-      });
-
-
-      book.save().then((result) => {
-        console.log("done");
-      });
     })
-
-
 
 
 

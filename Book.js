@@ -9,10 +9,7 @@ let bookSchema = new Schema({
     title: String,
     complete: Boolean,
     currentlyEditing: Boolean,
-    cover: {
-        color: String,
-        type: String
-    },
+    cover: Object,
     pages: [],
 });
 
