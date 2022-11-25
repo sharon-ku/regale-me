@@ -113,28 +113,41 @@ function newConnection(socket) {
 
   // send messages to database
   socket.on("sendMessage", function (data) {
-    let textToSave = data.pageText.inputText;
-    console.log(`logged message` + textToSave);
+    // let textToSave = data.pageText.inputText;
+    let messageToSave = data.newMessage;
+    console.log(data);
+    let promptToSave = data.newPrompt;
+    console.log(`logged message: ` + messageToSave, promptToSave);
 
     Book.findOne({}).then((result) => {
       firstBook = result;
       console.log(firstBook);
 
-      console.log(firstBook.pages[firstBook.pages.length - 1]);
+      // console.log(firstBook.pages[firstBook.pages.length - 1]);
 
       // Update pageText
-      firstBook.pages[firstBook.pages.length - 1].pageText = textToSave;
+      firstBook.pages[firstBook.pages.length - 1].pageText = messageToSave;
       console.log(firstBook.pages[firstBook.pages.length - 1]);
 
-      // Save pageText in Mongo
+
+      // For later when I want to add to array
+      let newPage = {
+        num: firstBook.pages.length,
+        prompt: promptToSave,
+        pageText: ""
+      };
+      firstBook.pages.push(newPage);
+
+      // console.log(`new page` + firstBook.pages[firstBook.pages.length]);
+
+      // Save pageText from current page + new page prompt in Mongo
       Book.updateOne({ _id: firstBook._id },
         { pages: firstBook.pages }).then((result) => {
           console.log(`saved page information`);
+          // Update all pages
+          // socket.emit("newBooks", firstBook);
         }
         )
-
-      // For later when I want to add to array
-      // firstBook.pages.push()
 
     })
 

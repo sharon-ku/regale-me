@@ -19,7 +19,7 @@ let app = new PIXI.Application({
   transparent: false,
   // width: 999, //640
   // height: 487, //360
-  backgroundColor: 0x98A66B,
+  backgroundColor: 0xC86637,
   width: window.innerWidth,
   height: window.innerHeight,
   autoResize: true,
@@ -120,6 +120,7 @@ function setup() {
           if (j % 2 == 0) {
             $(`#p${(j / 2) + 1}`).append(`
             <div class="front">
+            <div id="cover"><img src="assets/images/page-cover.png" alt="cover page"></div>
             <h2 class="prompt">${firstBook.pages[j].prompt}</h2>
             <p class="pageText">${firstBook.pages[j].pageText}</p>
             <label for="c${(j / 2) + 1}" class="next-btn">Next</label>
@@ -130,6 +131,7 @@ function setup() {
             // Put on back page (odd-number page)
             $(`#p${(j / 2) + 0.5}`).append(`
               <div class="back">
+              <div id="cover"><img src="assets/images/page-cover.png" alt="cover page"></div>
               <h2 class="prompt">${firstBook.pages[j].prompt}</h2>
               <p class="pageText">${firstBook.pages[j].pageText}</p>
               <label for="c${(j / 2) + 0.5}" class="back-btn">Back</label>
@@ -146,7 +148,8 @@ function setup() {
             <div class="front">
             <h2 class="prompt">${firstBook.pages[j].prompt}</h2>
             <form id="message-form" action="">
-              <textarea class="inputText" name="inputText" form="message-form" placeholder="Continue the story" required></textarea>
+              <textarea class="messageInputText" name="messageInputText" form="message-form" placeholder="Continue the story here..." required></textarea>
+              <textarea class="promptInputText" name="promptInputText" form="message-form" placeholder="And add a prompt for the next writer... [This will appear at the top of the next page.]" required></textarea>
               <input type="submit" id="submit-text-button" value="Submit">
             </form>
             </div>
@@ -158,7 +161,8 @@ function setup() {
               <div class="back">
               <h2 class="prompt">${firstBook.pages[j].prompt}</h2>
               <form id="message-form" action="">
-                <textarea class="inputText" name="inputText" form="message-form" placeholder="Continue the story" required></textarea>
+                <textarea class="messageInputText" name="messageInputText" form="message-form" placeholder="Continue the story here..." required></textarea>
+                <textarea class="promptInputText" name="promptInputText" form="message-form" placeholder="And add a prompt for the next writer... [This will appear at the top of the next page.]" required></textarea>
                 <input type="submit" id="submit-text-button" value="Submit">
               </form>
               <label for="c${(j / 2) + 0.5}" class="back-btn">Back</label>
@@ -176,20 +180,23 @@ function setup() {
       // console.log(`first thing ` + $("#message-form")[0]);
       let closeMessageForm = new FormData($("#message-form")[0]);
 
-      console.log(closeMessageForm);
+      console.log("checking data" + closeMessageForm);
 
       let inputText = {};
 
-      // Display the key/value pairs
+      // Display the key/value pairs: logs info from classes inputText and promptInputText
       for (var pair of closeMessageForm.entries()) {
         console.log(pair[0] + ", " + pair[1]);
         inputText[pair[0]] = pair[1];
       }
 
-      console.log(inputText);
+      console.log(`new information check1` + inputText.messageInputText);
+      console.log(`new information check2` + inputText.promptInputText);
+      console.log(`inputText is:` + inputText);
 
       clientSocket.emit(`sendMessage`, {
-        pageText: inputText,
+        newMessage: inputText.messageInputText,
+        newPrompt: inputText.promptInputText
       });
 
       // deletes text in search bar
