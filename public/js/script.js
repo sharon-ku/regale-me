@@ -312,7 +312,7 @@ function setup() {
           $(`#p${i}`).css({ "z-index": `${(numSheets + 1) - i}` });
         }
       });
-    }
+    } //setup end
 
 
     // create books
@@ -332,9 +332,15 @@ function setup() {
 
     // Request the user greenhouse positions to be found
     // clientSocket.emit("getUserPodPositions");
-  });
+  }); //client socket newBooks end
 
-}
+
+  // display books from database
+  clientSocket.on("updateBooks", function (firstBook) {
+    console.log(`updated the book`);
+  }); //client socket updateBooks end
+
+} //setup end
 
 // /********************************
 //  * HANDLE PAGE FLIPPING

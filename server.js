@@ -96,7 +96,8 @@ function newConnection(socket) {
   // console.log(socket);
   console.log(`new connection: ` + socket.id);
 
-  socket.on("join", function () {
+  socket.on("join", function (room) {
+    socket.join("room");
     socket.emit("joinedClientId", "temp");
 
   });
@@ -146,10 +147,13 @@ function newConnection(socket) {
           console.log(`saved page information`);
           // Update all pages
           // socket.emit("newBooks", firstBook);
+
+          // Broadcast message to all rooms
+          io.to("room").emit("updateBooks", firstBook);
         }
         )
 
-    })
+    }) // Book findOne then end
 
 
 
