@@ -139,7 +139,7 @@ function setup() {
       // Else if it's the last page, add prompt plus input field
       else if (j === totalPages - 1) {
         fillUpLastPage(j);
-        console.log(`added last page: p${j - 2}`);
+        
       } // else last page end
     } // for grab book end
 
@@ -217,6 +217,8 @@ function setup() {
         </div>
       `);
 
+      console.log(`added last page even: p${j - 2}`);
+
       } else {
         let setNumber = (j / 2) + 0.5;
         // Put on back page(odd - number page)
@@ -231,6 +233,8 @@ function setup() {
           <label for="c${setNumber}" class="back-btn">Back</label>
           </div>
         `);
+
+        console.log(`added last page odd: p${j - 2}`);
       } // else odd page end
     } // fillUpLastPage end
 
@@ -286,7 +290,9 @@ function setup() {
     // numPages will be number of dB pages
     // let numPages = 6;
     // numSheets = Math.ceil(numPages / 2)
-    let numSheets = 3;
+    // let numSheets = 3;
+    // calculate number of sheets/sets
+    let numSheets = Math.ceil(firstBook.pages.length / 2) + 1;
 
     setPageZIndex();
 
@@ -304,12 +310,21 @@ function setup() {
         if (this.checked) {
 
           $(`#c${i}:checked~.flip-book>#p${i}`).css({ "transform": "rotateY(-180deg)", "z-index": `${i}` });
+          
+          // Hide the front page underneath
+          setTimeout(() => {
+            $(`#p${i}>.front`).css({ "display": "none" });
+          }, 1000);
+          
+
         } else {
           // If page is flipped backward
           $(`.flip-book>#p${i}`).css({ "transform": "" });
-
           // Reset z-index of that specific page
           $(`#p${i}`).css({ "z-index": `${(numSheets + 1) - i}` });
+
+          // Reshow the hidden front page underneath
+          $(`#p${i}>.front`).css({ "display": "block" });
         }
       });
     } //setup end
