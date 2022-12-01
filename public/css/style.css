@@ -248,7 +248,7 @@ p {
 textarea.messageInputText {
     /* width: 220px; */
     width: 100%;
-    height: 200px;
+    height: 180px;
 
     font-size: 1.5rem;
     line-height: 2rem;
@@ -260,12 +260,15 @@ textarea.messageInputText {
 }
 
 textarea.promptInputText {
+    /* Hide initially */
+    display: none;
+
     width: 100%;
     height: 90px;
 
     resize: none;
     padding: 10px;
-    margin-top: 10px;
+    margin-top: 5px;
     background: none;
 
     font-size: 1.1rem;
@@ -276,14 +279,26 @@ textarea.promptInputText {
 }
 
 #submit-text-button {
+    /* Hide initially */
+    display: none;
+
     font-size: 1rem;
     padding: 3px 10px;
     margin-top: 10px;
 }
 
+#open-prompt-button {
+    font-size: 1rem;
+    padding: 3px 10px;
+    margin-top: 10px;
+}
+
+
 #submit-text-button:hover {
     cursor: pointer;
 }
+
+
 
 /* #p1 {
     z-index: 3;

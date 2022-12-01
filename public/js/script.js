@@ -219,22 +219,23 @@ function setup() {
         // Add input form
         addInputForm(setNumber, `back`, pageNumber);
 
-        // Add back button
-        $(`#p${setNumber}`).append(`
+        // Add back button and close div
+        $(`#p${setNumber}>div.back`).append(`
           <label for="c${setNumber}" class="back-btn">Back</label>
-          </div>
         `);
 
         console.log(`added last page odd: p${j - 2}`);
       } // else odd page end
     } // fillUpLastPage end
 
+    // Add messageInputText and promptInputText forms
     function addInputForm(setNumber, pageSide, pageNumber) {
       $(`#p${setNumber}`).append(`
         <div class=${pageSide}>
         <h2 class="prompt">${firstBook.pages[pageNumber].prompt}</h2>
         <form id="message-form" action="">
           <textarea class="messageInputText" name="messageInputText" form="message-form" placeholder="Continue the story here..." required></textarea>
+          <button type="button" id="open-prompt-button">Next</button>
           <textarea class="promptInputText" name="promptInputText" form="message-form" placeholder="And add a prompt for the next writer..." required></textarea>
           <input type="submit" id="submit-text-button" value="Submit">
         </form>
@@ -242,36 +243,74 @@ function setup() {
       `);
     }
 
+    // If the "Next" button is clicked:
+    $("#open-prompt-button").click(function () {
+      console.log($(`.messageInputText`).val());
+
+      // Check if the messageInputText box is filled, if it's empty:
+      if ($(`.messageInputText`).val() === ``) {
+        alert("Please continue the story :)");
+
+      } // end if
+      // If the messageInputText box is filled:
+      else {
+        // Hide "Next" button
+        $(this).hide();
+        // Have the promptInput box + submit button fade in
+        $(".promptInputText").fadeIn("slow");
+        $("#submit-text-button").fadeIn("slow");
+        $("#submit-text-button").css("display", "initial");
+      } // end else
+    }); // end open-prompt-button click
+
+
+
 
     // submit message
     $("#submit-text-button").click(function () {
-      event.preventDefault();
-      // console.log(`first thing ` + $("#message-form")[0]);
-      let closeMessageForm = new FormData($("#message-form")[0]);
+      // If the promptInputText box is empty:
+      if ($(`.promptInputText`).val() === ``) {
+        alert("Please enter a prompt for the next writer :)");
 
-      console.log("checking data" + closeMessageForm);
+      } // end if
 
-      let inputText = {};
+      // If the messageInputText box is empty:
+      else if ($(`.messageInputText`).val() === ``) {
+        alert("Please continue the story :)");
+      } // end if
 
-      // Display the key/value pairs: logs info from classes inputText and promptInputText
-      for (var pair of closeMessageForm.entries()) {
-        console.log(pair[0] + ", " + pair[1]);
-        inputText[pair[0]] = pair[1];
-      }
+      // If all forms are filled:
+      else {
+        event.preventDefault();
+        // console.log(`first thing ` + $("#message-form")[0]);
+        let closeMessageForm = new FormData($("#message-form")[0]);
 
-      console.log(`new information check1` + inputText.messageInputText);
-      console.log(`new information check2` + inputText.promptInputText);
-      console.log(`inputText is:` + inputText);
+        console.log("checking data" + closeMessageForm);
 
-      clientSocket.emit(`sendMessage`, {
-        newMessage: inputText.messageInputText,
-        newPrompt: inputText.promptInputText
-      });
+        let inputText = {};
 
-      // deletes text in search bar
-      document.getElementById(`message-form`).reset();
-      // $("#messageBox").empty();
-    });
+        // Display the key/value pairs: logs info from classes inputText and promptInputText
+        for (var pair of closeMessageForm.entries()) {
+          console.log(pair[0] + ", " + pair[1]);
+          inputText[pair[0]] = pair[1];
+        }
+
+        console.log(`new information check1` + inputText.messageInputText);
+        console.log(`new information check2` + inputText.promptInputText);
+        console.log(`inputText is:` + inputText);
+
+        clientSocket.emit(`sendMessage`, {
+          newMessage: inputText.messageInputText,
+          newPrompt: inputText.promptInputText
+        });
+
+        // deletes text in search bar
+        document.getElementById(`message-form`).reset();
+        // $("#messageBox").empty();
+
+
+      } // else end
+    }); // submit-text-button click end
 
 
 
