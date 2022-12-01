@@ -139,7 +139,7 @@ function setup() {
       // Else if it's the last page, add prompt plus input field
       else if (j === totalPages - 1) {
         fillUpLastPage(j);
-        
+
       } // else last page end
     } // for grab book end
 
@@ -206,30 +206,21 @@ function setup() {
       // If it's an even-number page
       if (j % 2 == 0) {
         let setNumber = (j / 2) + 1;
-        $(`#p${setNumber}`).append(`
-        <div class="front">
-        <h2 class="prompt">${firstBook.pages[pageNumber].prompt}</h2>
-        <form id="message-form" action="">
-          <textarea class="messageInputText" name="messageInputText" form="message-form" placeholder="Continue the story here..." required></textarea>
-          <textarea class="promptInputText" name="promptInputText" form="message-form" placeholder="And add a prompt for the next writer... [This will appear at the top of the next page.]" required></textarea>
-          <input type="submit" id="submit-text-button" value="Submit">
-        </form>
-        </div>
-      `);
 
-      console.log(`added last page even: p${j - 2}`);
+        // Add input form
+        addInputForm(setNumber, `front`, pageNumber);
+
+        console.log(`added last page even: p${j - 2}`);
 
       } else {
         let setNumber = (j / 2) + 0.5;
-        // Put on back page(odd - number page)
+        // Put on back page (odd-number page)
+
+        // Add input form
+        addInputForm(setNumber, `back`, pageNumber);
+
+        // Add back button
         $(`#p${setNumber}`).append(`
-          <div class="back">
-          <h2 class="prompt">${firstBook.pages[pageNumber].prompt}</h2>
-          <form id="message-form" action="">
-            <textarea class="messageInputText" name="messageInputText" form="message-form" placeholder="Continue the story here..." required></textarea>
-            <textarea class="promptInputText" name="promptInputText" form="message-form" placeholder="And add a prompt for the next writer... [This will appear at the top of the next page.]" required></textarea>
-            <input type="submit" id="submit-text-button" value="Submit">
-          </form>
           <label for="c${setNumber}" class="back-btn">Back</label>
           </div>
         `);
@@ -237,6 +228,19 @@ function setup() {
         console.log(`added last page odd: p${j - 2}`);
       } // else odd page end
     } // fillUpLastPage end
+
+    function addInputForm(setNumber, pageSide, pageNumber) {
+      $(`#p${setNumber}`).append(`
+        <div class=${pageSide}>
+        <h2 class="prompt">${firstBook.pages[pageNumber].prompt}</h2>
+        <form id="message-form" action="">
+          <textarea class="messageInputText" name="messageInputText" form="message-form" placeholder="Continue the story here..." required></textarea>
+          <textarea class="promptInputText" name="promptInputText" form="message-form" placeholder="And add a prompt for the next writer..." required></textarea>
+          <input type="submit" id="submit-text-button" value="Submit">
+        </form>
+        </div>
+      `);
+    }
 
 
     // submit message
@@ -310,12 +314,12 @@ function setup() {
         if (this.checked) {
 
           $(`#c${i}:checked~.flip-book>#p${i}`).css({ "transform": "rotateY(-180deg)", "z-index": `${i}` });
-          
+
           // Hide the front page underneath
           setTimeout(() => {
             $(`#p${i}>.front`).css({ "display": "none" });
           }, 1000);
-          
+
 
         } else {
           // If page is flipped backward
