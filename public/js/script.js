@@ -58,6 +58,11 @@ app.stage.addChild(book);
 /********************************
  * BOOK DOM SETUP
 ********************************/
+// total number of pages in a book
+let totalPages;
+
+// where the input values will be stored;
+let inputText = {};
 
 /* ----------------------------------------
 setup()
@@ -98,6 +103,15 @@ function setup() {
     });
   });
 
+  // create 1 new set
+  function createNewSet(setNumber) {
+    // create checkbox that tracks page flipping
+    $(`<input type="checkbox" id="c${setNumber + 1}">`).insertBefore(".flip-book");
+
+    // create a sheet for each set of pages
+    $(".flip-book").append(`<div class="flip" id="p${setNumber + 1}"></div>`);
+  }
+
   // display books from database
   clientSocket.on("newBooks", function (firstBook) {
     // calculate number of sheets/sets
@@ -106,15 +120,13 @@ function setup() {
 
     // For each set:
     for (let i = 0; i < numSets; i++) {
-      // create checkbox that tracks page flipping
-      $(`<input type="checkbox" id="c${i + 1}">`).insertBefore(".flip-book");
-
-      // create a sheet for each set of pages
-      $(".flip-book").append(`<div class="flip" id="p${i + 1}"></div>`);
+      let setNumber = i;
+      // create checkbox that tracks page flipping + new sheet
+      createNewSet(setNumber);
     } // for each set end
 
     // Pages in database plus cover page and first inner page
-    let totalPages = firstBook.pages.length + 2;
+    totalPages = firstBook.pages.length + 2;
 
     // Grab book content from Mongo
     for (let j = 0; j < totalPages; j++) {
@@ -138,7 +150,10 @@ function setup() {
 
       // Else if it's the last page, add prompt plus input field
       else if (j === totalPages - 1) {
-        fillUpLastPage(j);
+        let lastPageNumber = j;
+        let pageNumber = j - 2;
+        let lastPagePrompt = firstBook.pages[pageNumber].prompt;
+        fillUpLastPage(j, lastPagePrompt);
 
       } // else last page end
     } // for grab book end
@@ -200,15 +215,14 @@ function setup() {
     }
 
     // Else if it's the last page, add prompt plus input field
-    function fillUpLastPage(j) {
-      let pageNumber = j - 2;
+    function fillUpLastPage(j, prompt) {
 
       // If it's an even-number page
       if (j % 2 == 0) {
         let setNumber = (j / 2) + 1;
 
         // Add input form
-        addInputForm(setNumber, `front`, pageNumber);
+        addInputForm(setNumber, `front`, prompt);
 
         console.log(`added last page even: p${j - 2}`);
 
@@ -217,9 +231,9 @@ function setup() {
         // Put on back page (odd-number page)
 
         // Add input form
-        addInputForm(setNumber, `back`, pageNumber);
+        addInputForm(setNumber, `back`, prompt);
 
-        // Add back button and close div
+        // Add back button
         $(`#p${setNumber}>div.back`).append(`
           <label for="c${setNumber}" class="back-btn">Back</label>
         `);
@@ -229,10 +243,10 @@ function setup() {
     } // fillUpLastPage end
 
     // Add messageInputText and promptInputText forms
-    function addInputForm(setNumber, pageSide, pageNumber) {
+    function addInputForm(setNumber, pageSide, prompt) {
       $(`#p${setNumber}`).append(`
         <div class=${pageSide}>
-        <h2 class="prompt">${firstBook.pages[pageNumber].prompt}</h2>
+        <h2 class="prompt">${prompt}</h2>
         <form id="message-form" action="">
           <textarea class="messageInputText" name="messageInputText" form="message-form" placeholder="Continue the story here..." required></textarea>
           <button type="button" id="open-prompt-button">Next</button>
@@ -245,6 +259,7 @@ function setup() {
 
     // If the "Next" button is clicked:
     $("#open-prompt-button").click(function () {
+      console.log(`clicked Next button`);
       console.log($(`.messageInputText`).val());
 
       // Check if the messageInputText box is filled, if it's empty:
@@ -281,36 +296,93 @@ function setup() {
 
       // If all forms are filled:
       else {
-        event.preventDefault();
-        // console.log(`first thing ` + $("#message-form")[0]);
-        let closeMessageForm = new FormData($("#message-form")[0]);
+        // send message info to server
+        sendMessageInformation();
 
-        console.log("checking data" + closeMessageForm);
+        // hide message form
+        $(`#message-form`).hide();
 
-        let inputText = {};
+        console.log(`message form hidden`);
 
-        // Display the key/value pairs: logs info from classes inputText and promptInputText
-        for (var pair of closeMessageForm.entries()) {
-          console.log(pair[0] + ", " + pair[1]);
-          inputText[pair[0]] = pair[1];
-        }
+        // update latest page with new message
+        updateLatestMessage();
 
-        console.log(`new information check1` + inputText.messageInputText);
-        console.log(`new information check2` + inputText.promptInputText);
-        console.log(`inputText is:` + inputText);
+        // add a new page after ths latest page
+        let newPageNumber = totalPages;
+        // remove previous message form
+        $(`#message-form`).remove();
 
-        clientSocket.emit(`sendMessage`, {
-          newMessage: inputText.messageInputText,
-          newPrompt: inputText.promptInputText
-        });
 
-        // deletes text in search bar
-        document.getElementById(`message-form`).reset();
-        // $("#messageBox").empty();
+        fillUpLastPage(newPageNumber, inputText.promptInputText);
+
+        console.log(`added a new page to continue story`);
+
+
 
 
       } // else end
     }); // submit-text-button click end
+
+    // Update latest page with new message
+    function updateLatestMessage() {
+      let latestPage = totalPages - 1;
+      // front or back page:
+      let latestPageSide;
+      let setNumber;
+
+      // Update the latest page:
+      if (latestPage % 2 == 0) {
+        latestPageSide = `front`;
+        setNumber = (latestPage / 2) + 1;
+
+        // add Next button
+        $(`#p${setNumber}>div.${latestPageSide}`).append(`
+        <label for="c${setNumber}" class="next-btn">Next</label>
+      `);
+      } else {
+        latestPageSide = `back`;
+        setNumber = (latestPage / 2) + 0.5;
+        // create a new set
+        createNewSet(setNumber);
+      }
+
+      console.log(`latestPageSide=` + latestPageSide);
+
+
+      // Add message on latest page
+      $(`#p${setNumber}>div.${latestPageSide}`).append(`
+        <p class="pageText">${inputText.messageInputText}</p>
+      `);
+
+      console.log(`updated p${latestPage - 2}`);
+    }
+
+    function sendMessageInformation() {
+      event.preventDefault();
+      // console.log(`first thing ` + $("#message-form")[0]);
+      let closeMessageForm = new FormData($("#message-form")[0]);
+
+      console.log("checking data" + closeMessageForm);
+
+      // Display the key/value pairs: logs info from classes inputText and promptInputText
+      for (var pair of closeMessageForm.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+        inputText[pair[0]] = pair[1];
+      }
+
+      console.log(`new information check1` + inputText.messageInputText);
+      console.log(`new information check2` + inputText.promptInputText);
+      console.log(`inputText is:` + inputText);
+
+      clientSocket.emit(`sendMessage`, {
+        newMessage: inputText.messageInputText,
+        newPrompt: inputText.promptInputText
+      });
+
+      // // deletes text in search bar
+      // document.getElementById(`message-form`).reset();
+
+    }
 
 
 

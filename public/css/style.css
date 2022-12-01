@@ -178,14 +178,14 @@ p {
 .next-btn {
     position: absolute;
     bottom: 30px;
-    right: 210px;
+    right: 50px;
     cursor: pointer;
 }
 
 .back-btn {
     position: absolute;
     bottom: 30px;
-    left: 210px;
+    left: 50px;
     cursor: pointer;
 }
 
@@ -287,16 +287,23 @@ textarea.promptInputText {
     margin-top: 10px;
 }
 
+
+#submit-text-button:hover {
+    cursor: pointer;
+}
+
 #open-prompt-button {
     font-size: 1rem;
     padding: 3px 10px;
     margin-top: 10px;
 }
 
-
-#submit-text-button:hover {
+#open-prompt-button:hover {
     cursor: pointer;
 }
+
+
+
 
 
 
