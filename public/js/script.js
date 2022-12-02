@@ -500,8 +500,12 @@ function setup() {
    **********************/
 
   // display books from database
-  clientSocket.on("updateBooks", function (firstBook) {
+  clientSocket.on("updateBooks", function (firstBook, newMessage, newPrompt) {
     console.log(`updated the book`);
+
+    // Log inputText from server:
+    inputText.messageInputText = newMessage;
+    inputText.promptInputText = newPrompt;
 
     // hide message form
     $(`#message-form`).hide();
@@ -518,8 +522,9 @@ function setup() {
     $(`#message-form`).remove();
 
     console.log(`inputTextprompt = ` + inputText.promptInputText);
+    console.log(`inputTextmessage = ` + inputText.messageInputText);
 
-    fillUpLastPage(newPageNumber, inputText.promptInputText);
+    fillUpLastPage(newPageNumber, newPrompt);
 
     console.log(`ADDED NEW PAGE TO NEW BOOK`);
 
@@ -593,7 +598,6 @@ function flipOnePage(i) {
     }
   });
 }
-
 
 
 /********************************
