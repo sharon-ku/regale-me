@@ -216,9 +216,9 @@ function setup() {
 
 
     // --------------------------------
-    // * HANDLE PAGE FLIPPING
+    // * HANDLE INITIAL PAGE FLIPPING
     // --------------------------------/
-    handlePageFlipping();
+    handleInitialPageFlipping();
 
     // /********************************
     // * UNUSED
@@ -387,9 +387,12 @@ function setup() {
       createNewSet(setNumber);
       // increase numSet by 1
       numSets += 1;
-      // handle page flipping (the lazy way)
-      // handlePageFlipping();
+      // handle page flipping for latest set number
+      handleLatestPageFlipping(numSets);
+      console.log(`latestSetNumber IS` + numSets);
     }
+
+
 
     console.log(`latestPageSide=` + latestPageSide);
 
@@ -502,7 +505,7 @@ function setup() {
 
     console.log(`new information check1` + inputText.messageInputText);
     console.log(`new information check2` + inputText.promptInputText);
-    console.log(`inputText is:` + inputText);
+    // console.log(`inputText is:` + inputText);
 
     clientSocket.emit(`sendMessage`, {
       newMessage: inputText.messageInputText,
@@ -531,45 +534,68 @@ function setup() {
  * HANDLE PAGE FLIPPING
  ********************************/
 
-function handlePageFlipping() {
+function handleInitialPageFlipping() {
   // // calculate number of sheets/sets
   // let numSheets = Math.ceil(firstBook.pages.length / 2) + 1;
 
-  setPageZIndex();
-
-  // Set initial z-index of all pages
-  function setPageZIndex() {
-    for (let i = 1; i < numSets + 1; i++) {
-      $(`#p${i}`).css({ "z-index": `${(numSets + 1) - i}` });
-    }
-  }
+  setInitialPageZIndex();
 
   // Flip pages by changing CSS
   for (let i = 1; i < numSets + 1; i++) {
-    $(`#c${i}`).change(function () {
-      // If page is flipped forward
-      if (this.checked) {
+    let setNumber = i;
+    flipOnePage(setNumber);
+  } // for-loop flip pages end
+} // handleInitialPageFlipping() end
 
-        $(`#c${i}:checked~.flip-book>#p${i}`).css({ "transform": "rotateY(-180deg)", "z-index": `${i}` });
+// Set initial z-index of all pages
+function setInitialPageZIndex() {
+  for (let i = 1; i < numSets + 1; i++) {
+    let setNumber = i;
+    setOnePageZIndex(setNumber);
+  }
+} // setPageZIndex end
 
-        // Hide the front page underneath
-        setTimeout(() => {
-          $(`#p${i}>.front`).css({ "display": "none" });
-        }, 1000);
+// Handle page flipping for latest page
+function handleLatestPageFlipping(setNumber) {
+  let i = setNumber;
+  // Set page index for one page
+  setOnePageZIndex(i);
 
+  // Handle one page flipping
+  flipOnePage(i);
+  console.log(`handled latest page flipping`);
+}
 
-      } else {
-        // If page is flipped backward
-        $(`.flip-book>#p${i}`).css({ "transform": "" });
-        // Reset z-index of that specific page
-        $(`#p${i}`).css({ "z-index": `${(numSets + 1) - i}` });
+// Set page index for one page
+function setOnePageZIndex(i) {
+  $(`#p${i}`).css({ "z-index": `${(numSets + 1) - i}` });
+}
 
-        // Reshow the hidden front page underneath
-        $(`#p${i}>.front`).css({ "display": "block" });
-      }
-    });
-  } //flip pages end
-} // handlePageFlipping() end
+// Handle one page flipping
+function flipOnePage(i) {
+  $(`#c${i}`).change(function () {
+    // If page is flipped forward
+    if (this.checked) {
+
+      $(`#c${i}:checked~.flip-book>#p${i}`).css({ "transform": "rotateY(-180deg)", "z-index": `${i}` });
+
+      // Hide the front page underneath
+      setTimeout(() => {
+        $(`#p${i}>.front`).css({ "display": "none" });
+      }, 1000);
+
+    } else {
+      // If page is flipped backward
+      $(`.flip-book>#p${i}`).css({ "transform": "" });
+      // Reset z-index of that specific page
+      $(`#p${i}`).css({ "z-index": `${(numSets + 1) - i}` });
+
+      // Reshow the hidden front page underneath
+      $(`#p${i}>.front`).css({ "display": "block" });
+    }
+  });
+}
+
 
 
 /********************************
