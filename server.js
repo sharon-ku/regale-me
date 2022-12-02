@@ -151,8 +151,11 @@ function newConnection(socket) {
           // Reset button clicks
           socket.emit("resetButtonClicks");
 
-          // Broadcast message to all rooms
-          io.to("room").emit("updateBooks", firstBook);
+          // Unused - Broadcast message to all people in room
+          // io.to("room").emit("updateBooks", firstBook);
+
+          // Broadcast message to everyone except sender
+          socket.broadcast.emit("updateBooks", firstBook);
         }
         )
 

@@ -125,7 +125,7 @@ function setup() {
     for (let j = 0; j < totalPages; j++) {
       // If it's the cover page
       if (j === 0) {
-        fillUpCoverPage(j);
+        fillUpCoverPage(j, firstBook);
         console.log(`added cover`);
       } //if j=0 end
 
@@ -137,7 +137,7 @@ function setup() {
 
       // If it's neither the first nor last page:
       else if (j != totalPages - 1) {
-        fillUpInBetweenPages(j);
+        fillUpInBetweenPages(j, firstBook);
         console.log(`added p${j - 2}`);
       } // if neither first nor last end
 
@@ -151,64 +151,9 @@ function setup() {
       } // else last page end
     } // for grab book end
 
-    // If it's cover page, put cover page image and title
-    function fillUpCoverPage(j) {
-      let setNumber = (j / 2) + 1;
-      $(`#p${setNumber}`).append(`
-        <div class="front">
-        <div id="cover-page"><img src="assets/images/page-cover.png" alt="cover page"></div>
-        <p class="cover-title">${firstBook.title}</p>
-        <label for="c${setNumber}" class="next-btn">Next</label>
-        </div>
-      `);
-    }
-
-    // If it's first inner page (back of cover), put image
-    function fillUpFirstInnerPage(j) {
-      // Put on back page (odd-number page)
-      let setNumber = (j / 2) + 0.5;
-      $(`#p${setNumber}`).append(`
-      <div class="back">
-      <div id="inner-page-image"><img src="assets/images/page-left.png" alt="inner page"></div>
-      <label for="c${setNumber}" class="back-btn">Back</label>
-      </div>
-    `);
-    }
-
-    // If it's neither the first or last page, fill page with prompt and text
-    function fillUpInBetweenPages(j) {
-      let pageNumber = j - 2;
-
-      // If it's an even-number page
-      if (j % 2 == 0) {
-        let setNumber = (j / 2) + 1;
-
-        $(`#p${setNumber}`).append(`
-          <div class="front">
-          <div id="inner-page-image"><img src="assets/images/page-right.png" alt="inner page"></div>
-          <h2 class="prompt">${firstBook.pages[pageNumber].prompt}</h2>
-          <p class="pageText">${firstBook.pages[pageNumber].pageText}</p>
-          <label for="c${setNumber}" class="next-btn">Next</label>
-          </div>
-        `);
-
-      } else {
-        let setNumber = (j / 2) + 0.5;
-
-        // Put on back page (odd-number page)
-        $(`#p${setNumber}`).append(`
-          <div class="back">
-          <div id="inner-page-image"><img src="assets/images/page-left.png" alt="inner page"></div>
-          <h2 class="prompt">${firstBook.pages[pageNumber].prompt}</h2>
-          <p class="pageText">${firstBook.pages[pageNumber].pageText}</p>
-          <label for="c${setNumber}" class="back-btn">Back</label>
-          </div>
-        `);
-      } // else odd page end
-    }
-
-
-    // Handle button clicks:
+    // --------------------------------
+    // * HANDLE BUTTON CLICKS
+    // --------------------------------/
     // // If the "Next" button is clicked:
     nextButtonClicked();
     // // If the "Submit" button clicked:
@@ -294,7 +239,6 @@ function setup() {
 
         // hide message form
         $(`#message-form`).hide();
-
         console.log(`message form hidden`);
 
         // update latest page with new message
@@ -302,15 +246,12 @@ function setup() {
 
         // add a new page after ths latest page
         let newPageNumber = totalPages;
-        // // increase totalPages by 1
-        // totalPages += 1;
-        // console.log(`totalPages = ` + totalPages);
+
         // remove previous message form
         $(`#message-form`).remove();
 
-
+        // filled up last page with new prompt + new form
         fillUpLastPage(newPageNumber, inputText.promptInputText);
-
         console.log(`added a new page to continue story`);
 
 
@@ -356,7 +297,6 @@ function setup() {
   // -----------------
   // * Update latest page when new message
   // -----------------/
-  // Update latest page with new message
   function updateLatestMessage() {
     if (!firstTimeUpdatingPage) {
       // increase totalPages by 1
@@ -389,7 +329,7 @@ function setup() {
       numSets += 1;
       // handle page flipping for latest set number
       handleLatestPageFlipping(numSets);
-      console.log(`latestSetNumber IS` + numSets);
+      console.log(`latestSetNumber IS ` + numSets);
     }
 
 
@@ -403,6 +343,74 @@ function setup() {
     `);
 
     console.log(`updated p${latestPage - 2}`);
+  }
+
+  // -----------------
+  // * Fill up cover page
+  // -----------------/
+
+  // If it's cover page, put cover page image and title
+  function fillUpCoverPage(j, firstBook) {
+    let setNumber = (j / 2) + 1;
+    $(`#p${setNumber}`).append(`
+      <div class="front">
+      <div id="cover-page"><img src="assets/images/page-cover.png" alt="cover page"></div>
+      <p class="cover-title">${firstBook.title}</p>
+      <label for="c${setNumber}" class="next-btn">Next</label>
+      </div>
+    `);
+  } //fillUpCoverPage() end
+
+  // -----------------
+  // * Fill up  first inner page
+  // -----------------/
+
+  // If it's first inner page (back of cover), put image
+  function fillUpFirstInnerPage(j) {
+    // Put on back page (odd-number page)
+    let setNumber = (j / 2) + 0.5;
+    $(`#p${setNumber}`).append(`
+    <div class="back">
+    <div id="inner-page-image"><img src="assets/images/page-left.png" alt="inner page"></div>
+    <label for="c${setNumber}" class="back-btn">Back</label>
+    </div>
+  `);
+  } // fillUpFirstInnerPage() end
+
+  // -----------------
+  // * Fill up  in between pages
+  // -----------------/
+
+  // If it's neither the first or last page, fill page with prompt and text
+  function fillUpInBetweenPages(j, firstBook) {
+    let pageNumber = j - 2;
+
+    // If it's an even-number page
+    if (j % 2 == 0) {
+      let setNumber = (j / 2) + 1;
+
+      $(`#p${setNumber}`).append(`
+        <div class="front">
+        <div id="inner-page-image"><img src="assets/images/page-right.png" alt="inner page"></div>
+        <h2 class="prompt">${firstBook.pages[pageNumber].prompt}</h2>
+        <p class="pageText">${firstBook.pages[pageNumber].pageText}</p>
+        <label for="c${setNumber}" class="next-btn">Next</label>
+        </div>
+      `);
+
+    } else {
+      let setNumber = (j / 2) + 0.5;
+
+      // Put on back page (odd-number page)
+      $(`#p${setNumber}`).append(`
+        <div class="back">
+        <div id="inner-page-image"><img src="assets/images/page-left.png" alt="inner page"></div>
+        <h2 class="prompt">${firstBook.pages[pageNumber].prompt}</h2>
+        <p class="pageText">${firstBook.pages[pageNumber].pageText}</p>
+        <label for="c${setNumber}" class="back-btn">Back</label>
+        </div>
+      `);
+    } // else odd page end
   }
 
   // -----------------
@@ -520,12 +528,34 @@ function setup() {
 
 
   /***********************
-   *  updateBooks
+   *  CLIENTSOCKET: UPDATE BOOKS
    **********************/
 
   // display books from database
   clientSocket.on("updateBooks", function (firstBook) {
     console.log(`updated the book`);
+
+    // hide message form
+    $(`#message-form`).hide();
+
+    console.log(`message form hidden`);
+
+    // update latest page with new message
+    updateLatestMessage();
+
+    // add a new page after ths latest page
+    let newPageNumber = totalPages;
+
+    // remove previous message form
+    $(`#message-form`).remove();
+
+    console.log(`inputTextprompt = ` + inputText.promptInputText);
+
+    fillUpLastPage(newPageNumber, inputText.promptInputText);
+
+    console.log(`ADDED NEW PAGE TO NEW BOOK`);
+
+
   }); //client socket updateBooks end
 
 } //setup end
