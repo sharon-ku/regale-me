@@ -152,10 +152,11 @@ function newConnection(socket) {
           // io.to("room").emit("updateBooks", firstBook);
 
           // Broadcast message to everyone except sender
-          socket.broadcast.emit("updateBooks", firstBook, messageToSave, promptToSave);
+          // socket.broadcast.emit("updateBooks", firstBook, messageToSave, promptToSave);
+          socket.broadcast.emit("newBooks", firstBook);
 
-          // Reset button clicks
-          socket.broadcast.emit("resetButtonClicks");
+          // Reset button clicks for everyone
+          io.emit("resetButtonClicks");
         }
         )
 
