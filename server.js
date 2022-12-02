@@ -148,6 +148,9 @@ function newConnection(socket) {
           // Update all pages
           // socket.emit("newBooks", firstBook);
 
+          // Reset button clicks
+          socket.emit("resetButtonClicks");
+
           // Broadcast message to all rooms
           io.to("room").emit("updateBooks", firstBook);
         }

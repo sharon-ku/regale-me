@@ -1,9 +1,8 @@
 /**
-Title of Project
-Author Name
+Regale Me
+Sharon Ku
 
-This is a template. You must fill in the title,
-author, and this description to match your project!
+Client-side script
 */
 
 "use strict";
@@ -60,6 +59,8 @@ app.stage.addChild(book);
 ********************************/
 // total number of pages in a book
 let totalPages;
+// number of sets in the book
+let numSets;
 
 // where the input values will be stored;
 let inputText = {};
@@ -103,19 +104,11 @@ function setup() {
     });
   });
 
-  // create 1 new set
-  function createNewSet(setNumber) {
-    // create checkbox that tracks page flipping
-    $(`<input type="checkbox" id="c${setNumber + 1}">`).insertBefore(".flip-book");
-
-    // create a sheet for each set of pages
-    $(".flip-book").append(`<div class="flip" id="p${setNumber + 1}"></div>`);
-  }
 
   // display books from database
   clientSocket.on("newBooks", function (firstBook) {
     // calculate number of sheets/sets
-    let numSets = Math.ceil(firstBook.pages.length / 2) + 1;
+    numSets = Math.ceil(firstBook.pages.length / 2) + 1;
     console.log(numSets);
 
     // For each set:
@@ -214,50 +207,50 @@ function setup() {
       } // else odd page end
     }
 
-    // Else if it's the last page, add prompt plus input field
-    function fillUpLastPage(j, prompt) {
 
-      // If it's an even-number page
-      if (j % 2 == 0) {
-        let setNumber = (j / 2) + 1;
+    // Handle button clicks:
+    // // If the "Next" button is clicked:
+    nextButtonClicked();
+    // // If the "Submit" button clicked:
+    submitButtonClicked();
 
-        // Add input form
-        addInputForm(setNumber, `front`, prompt);
 
-        console.log(`added last page even: p${j - 2}`);
+    // --------------------------------
+    // * HANDLE PAGE FLIPPING
+    // --------------------------------/
+    handlePageFlipping();
 
-      } else {
-        let setNumber = (j / 2) + 0.5;
-        // Put on back page (odd-number page)
+    // /********************************
+    // * UNUSED
+    // ********************************/
+    // create books
+    // for (let i = 0; i < results.length; i++) {
+    //     console.log(results[i]);
+    //     // keep some distance from borders
 
-        // Add input form
-        addInputForm(setNumber, `back`, prompt);
+    //     //   let x = results[i].x;
+    //     //   let y = results[i].y;
+    //     //   let image = random(podImages);
+    //     //   let taken = results[i].taken;
 
-        // Add back button
-        $(`#p${setNumber}>div.back`).append(`
-          <label for="c${setNumber}" class="back-btn">Back</label>
-        `);
+    //     //   // resize canvas to windowWidth and windowHeight
+    //     //   let pod = new Greenhouse(x, y, image, windowWidth, windowHeight, taken);
+    //     //   pods.push(pod);
+    // }
 
-        console.log(`added last page odd: p${j - 2}`);
-      } // else odd page end
-    } // fillUpLastPage end
+    // Request the user greenhouse positions to be found
+    // clientSocket.emit("getUserPodPositions");
+  }); //client socket newBooks end
 
-    // Add messageInputText and promptInputText forms
-    function addInputForm(setNumber, pageSide, prompt) {
-      $(`#p${setNumber}`).append(`
-        <div class=${pageSide}>
-        <h2 class="prompt">${prompt}</h2>
-        <form id="message-form" action="">
-          <textarea class="messageInputText" name="messageInputText" form="message-form" placeholder="Continue the story here..." required></textarea>
-          <button type="button" id="open-prompt-button">Next</button>
-          <textarea class="promptInputText" name="promptInputText" form="message-form" placeholder="And add a prompt for the next writer..." required></textarea>
-          <input type="submit" id="submit-text-button" value="Submit">
-        </form>
-        </div>
-      `);
-    }
 
-    // If the "Next" button is clicked:
+  /********************************
+   * HANDLE BUTTON CLICKS
+  ********************************/
+
+  // -----------------
+  // * Next button
+  // -----------------/
+  function nextButtonClicked() {
     $("#open-prompt-button").click(function () {
       console.log(`clicked Next button`);
       console.log($(`.messageInputText`).val());
@@ -277,16 +270,16 @@ function setup() {
         $("#submit-text-button").css("display", "initial");
       } // end else
     }); // end open-prompt-button click
+  } // nextButtonClicked end
 
-
-
-
-    // submit message
+  // -----------------
+  // * Submit button
+  // -----------------/
+  function submitButtonClicked() {
     $("#submit-text-button").click(function () {
       // If the promptInputText box is empty:
       if ($(`.promptInputText`).val() === ``) {
         alert("Please enter a prompt for the next writer :)");
-
       } // end if
 
       // If the messageInputText box is empty:
@@ -309,6 +302,9 @@ function setup() {
 
         // add a new page after ths latest page
         let newPageNumber = totalPages;
+        // // increase totalPages by 1
+        // totalPages += 1;
+        // console.log(`totalPages = ` + totalPages);
         // remove previous message form
         $(`#message-form`).remove();
 
@@ -322,148 +318,207 @@ function setup() {
 
       } // else end
     }); // submit-text-button click end
-
-    // Update latest page with new message
-    function updateLatestMessage() {
-      let latestPage = totalPages - 1;
-      // front or back page:
-      let latestPageSide;
-      let setNumber;
-
-      // Update the latest page:
-      if (latestPage % 2 == 0) {
-        latestPageSide = `front`;
-        setNumber = (latestPage / 2) + 1;
-
-        // add Next button
-        $(`#p${setNumber}>div.${latestPageSide}`).append(`
-        <label for="c${setNumber}" class="next-btn">Next</label>
-      `);
-      } else {
-        latestPageSide = `back`;
-        setNumber = (latestPage / 2) + 0.5;
-        // create a new set
-        createNewSet(setNumber);
-      }
-
-      console.log(`latestPageSide=` + latestPageSide);
+  } // submitButtonClicked() end
 
 
-      // Add message on latest page
+  /********************************
+   * CLIENTSOCKET: RESET BUTTON CLICKS
+   ********************************/
+
+  // display books from database
+  clientSocket.on("resetButtonClicks", function () {
+    // "Next" button clicked:
+    nextButtonClicked();
+    // "Submit" button clicked:
+    submitButtonClicked();
+
+    console.log(`button clicks reset`);
+  }); //client socket resetButtonClicks end
+
+
+  /********************************
+   * UPDATE PAGE CONTENT
+   ********************************/
+
+  // -----------------
+  // * Create 1 new set
+  // -----------------/
+  function createNewSet(setNumber) {
+    // create checkbox that tracks page flipping
+    $(`<input type="checkbox" id="c${setNumber + 1}">`).insertBefore(".flip-book");
+
+    // create a sheet for each set of pages
+    $(".flip-book").append(`<div class="flip" id="p${setNumber + 1}"></div>`);
+  }
+
+  let firstTimeUpdatingPage = true;
+
+  // -----------------
+  // * Update latest page when new message
+  // -----------------/
+  // Update latest page with new message
+  function updateLatestMessage() {
+    if (!firstTimeUpdatingPage) {
+      // increase totalPages by 1
+      totalPages += 1;
+      console.log(`totalPages = ` + totalPages);
+    } else {
+      firstTimeUpdatingPage = false;
+    }
+
+    let latestPage = totalPages - 1;
+    // front or back page:
+    let latestPageSide;
+    let setNumber;
+
+    // Update the latest page:
+    if (latestPage % 2 == 0) {
+      latestPageSide = `front`;
+      setNumber = (latestPage / 2) + 1;
+
+      // add Next button
       $(`#p${setNumber}>div.${latestPageSide}`).append(`
-        <p class="pageText">${inputText.messageInputText}</p>
+      <label for="c${setNumber}" class="next-btn">Next</label>
+    `);
+    } else {
+      latestPageSide = `back`;
+      setNumber = (latestPage / 2) + 0.5;
+      // create a new set
+      createNewSet(setNumber);
+      // increase numSet by 1
+      numSets += 1;
+      // handle page flipping (the lazy way)
+      // handlePageFlipping();
+    }
+
+    console.log(`latestPageSide=` + latestPageSide);
+
+
+    // Add message on latest page
+    $(`#p${setNumber}>div.${latestPageSide}`).append(`
+      <p class="pageText">${inputText.messageInputText}</p>
+    `);
+
+    console.log(`updated p${latestPage - 2}`);
+  }
+
+  // -----------------
+  // * Fill up last page
+  // -----------------/
+  // Else if it's the last page, add prompt plus input field
+  function fillUpLastPage(j, prompt) {
+
+    // If it's an even-number page
+    if (j % 2 == 0) {
+      let setNumber = (j / 2) + 1;
+
+      // Add input form
+      addInputForm(setNumber, `front`, prompt);
+
+      console.log(`added last page even: p${j - 2}`);
+
+    } else {
+      let setNumber = (j / 2) + 0.5;
+      // Put on back page (odd-number page)
+
+      // Add input form
+      addInputForm(setNumber, `back`, prompt);
+
+      // Add back button
+      $(`#p${setNumber}>div.back`).append(`
+          <label for="c${setNumber}" class="back-btn">Back</label>
+        `);
+
+      console.log(`added last page odd: p${j - 2}`);
+    } // else odd page end
+  } // fillUpLastPage end
+
+
+
+  // -----------------
+  // * Fill up last page
+  // -----------------/
+  // Else if it's the last page, add prompt plus input field
+  function fillUpLastPage(j, prompt) {
+
+    // If it's an even-number page
+    if (j % 2 == 0) {
+      let setNumber = (j / 2) + 1;
+
+      // Add input form
+      addInputForm(setNumber, `front`, prompt);
+
+      console.log(`added last page even: p${j - 2}`);
+
+    } else {
+      let setNumber = (j / 2) + 0.5;
+      // Put on back page (odd-number page)
+
+      // Add input form
+      addInputForm(setNumber, `back`, prompt);
+
+      // Add back button
+      $(`#p${setNumber}>div.back`).append(`
+        <label for="c${setNumber}" class="back-btn">Back</label>
       `);
 
-      console.log(`updated p${latestPage - 2}`);
+      console.log(`added last page odd: p${j - 2}`);
+    } // else odd page end
+  } // fillUpLastPage end
+
+  // -----------------
+  // * Add input form
+  // -----------------/
+  // Add messageInputText and promptInputText forms
+  function addInputForm(setNumber, pageSide, prompt) {
+    $(`#p${setNumber}`).append(`
+        <div class=${pageSide}>
+        <h2 class="prompt">${prompt}</h2>
+        <form id="message-form" action="">
+          <textarea class="messageInputText" name="messageInputText" form="message-form" placeholder="Continue the story here..." required></textarea>
+          <button type="button" id="open-prompt-button">Next</button>
+          <textarea class="promptInputText" name="promptInputText" form="message-form" placeholder="And add a prompt for the next writer..." required></textarea>
+          <input type="submit" id="submit-text-button" value="Submit">
+        </form>
+        </div>
+      `);
+  }
+
+  // -----------------
+  // * Send message information
+  // -----------------/
+  function sendMessageInformation() {
+    event.preventDefault();
+    // console.log(`first thing ` + $("#message-form")[0]);
+    let closeMessageForm = new FormData($("#message-form")[0]);
+
+    console.log("checking data" + closeMessageForm);
+
+    // Display the key/value pairs: logs info from classes inputText and promptInputText
+    for (var pair of closeMessageForm.entries()) {
+      console.log(pair[0] + ", " + pair[1]);
+      inputText[pair[0]] = pair[1];
     }
 
-    function sendMessageInformation() {
-      event.preventDefault();
-      // console.log(`first thing ` + $("#message-form")[0]);
-      let closeMessageForm = new FormData($("#message-form")[0]);
+    console.log(`new information check1` + inputText.messageInputText);
+    console.log(`new information check2` + inputText.promptInputText);
+    console.log(`inputText is:` + inputText);
 
-      console.log("checking data" + closeMessageForm);
+    clientSocket.emit(`sendMessage`, {
+      newMessage: inputText.messageInputText,
+      newPrompt: inputText.promptInputText
+    });
 
-      // Display the key/value pairs: logs info from classes inputText and promptInputText
-      for (var pair of closeMessageForm.entries()) {
-        console.log(pair[0] + ", " + pair[1]);
-        inputText[pair[0]] = pair[1];
-      }
+    // // deletes text in search bar
+    // document.getElementById(`message-form`).reset();
 
-      console.log(`new information check1` + inputText.messageInputText);
-      console.log(`new information check2` + inputText.promptInputText);
-      console.log(`inputText is:` + inputText);
-
-      clientSocket.emit(`sendMessage`, {
-        newMessage: inputText.messageInputText,
-        newPrompt: inputText.promptInputText
-      });
-
-      // // deletes text in search bar
-      // document.getElementById(`message-form`).reset();
-
-    }
+  }
 
 
 
-    // // UNUSED: Grab book content from Mongo
-    // for (let i = 0; i < firstBook.pages.length; i++) {
-    //   // If it's an even-number page
-    //   if (i % 2 == 0) {
-    //     $(`#p${(i / 2) + 1}>.front>.prompt`).text(firstBook.pages[i].prompt);
-    //     $(`#p${(i / 2) + 1}>.front>.pageText`).text(firstBook.pages[i].pageText);
-    //   } else {
-    //     // Put on back page (odd-number page)
-    //     $(`#p${(i / 2) + 0.5}>.back>.prompt`).text(firstBook.pages[i].prompt);
-    //     $(`#p${(i / 2) + 0.5}>.back>.pageText`).text(firstBook.pages[i].pageText);
-    //   }
-    // }
-
-    /********************************
-    * HANDLE PAGE FLIPPING
-    ********************************/
-    // numPages will be number of dB pages
-    // let numPages = 6;
-    // numSheets = Math.ceil(numPages / 2)
-    // let numSheets = 3;
-    // calculate number of sheets/sets
-    let numSheets = Math.ceil(firstBook.pages.length / 2) + 1;
-
-    setPageZIndex();
-
-    // Set initial z-index of all pages
-    function setPageZIndex() {
-      for (let i = 1; i < numSheets + 1; i++) {
-        $(`#p${i}`).css({ "z-index": `${(numSheets + 1) - i}` });
-      }
-    }
-
-    // Flip pages by changing CSS
-    for (let i = 1; i < numSheets + 1; i++) {
-      $(`#c${i}`).change(function () {
-        // If page is flipped forward
-        if (this.checked) {
-
-          $(`#c${i}:checked~.flip-book>#p${i}`).css({ "transform": "rotateY(-180deg)", "z-index": `${i}` });
-
-          // Hide the front page underneath
-          setTimeout(() => {
-            $(`#p${i}>.front`).css({ "display": "none" });
-          }, 1000);
-
-
-        } else {
-          // If page is flipped backward
-          $(`.flip-book>#p${i}`).css({ "transform": "" });
-          // Reset z-index of that specific page
-          $(`#p${i}`).css({ "z-index": `${(numSheets + 1) - i}` });
-
-          // Reshow the hidden front page underneath
-          $(`#p${i}>.front`).css({ "display": "block" });
-        }
-      });
-    } //setup end
-
-
-    // create books
-    // for (let i = 0; i < results.length; i++) {
-    //     console.log(results[i]);
-    //     // keep some distance from borders
-
-    //     //   let x = results[i].x;
-    //     //   let y = results[i].y;
-    //     //   let image = random(podImages);
-    //     //   let taken = results[i].taken;
-
-    //     //   // resize canvas to windowWidth and windowHeight
-    //     //   let pod = new Greenhouse(x, y, image, windowWidth, windowHeight, taken);
-    //     //   pods.push(pod);
-    // }
-
-    // Request the user greenhouse positions to be found
-    // clientSocket.emit("getUserPodPositions");
-  }); //client socket newBooks end
-
+  /***********************
+   *  updateBooks
+   **********************/
 
   // display books from database
   clientSocket.on("updateBooks", function (firstBook) {
@@ -472,40 +527,49 @@ function setup() {
 
 } //setup end
 
-// /********************************
-//  * HANDLE PAGE FLIPPING
-// ********************************/
-// // numPages will be number of dB pages
-// // let numPages = 6;
-// // numSheets = Math.ceil(numPages / 2)
-// let numSheets = 3;
+/********************************
+ * HANDLE PAGE FLIPPING
+ ********************************/
 
-// setPageZIndex();
+function handlePageFlipping() {
+  // // calculate number of sheets/sets
+  // let numSheets = Math.ceil(firstBook.pages.length / 2) + 1;
 
-// // Set initial z-index of all pages
-// function setPageZIndex() {
-//     for (let i = 1; i < numSheets + 1; i++) {
-//         $(`#p${i}`).css({ "z-index": `${(numSheets + 1) - i}` });
-//     }
-// }
+  setPageZIndex();
 
-// // Flip pages by changing CSS
-// for (let i = 1; i < numSheets + 1; i++) {
-//     $(`#c${i}`).change(function () {
-//         // If page is flipped forward
-//         if (this.checked) {
+  // Set initial z-index of all pages
+  function setPageZIndex() {
+    for (let i = 1; i < numSets + 1; i++) {
+      $(`#p${i}`).css({ "z-index": `${(numSets + 1) - i}` });
+    }
+  }
 
-//             $(`#c${i}:checked~.flip-book>#p${i}`).css({ "transform": "rotateY(-180deg)", "z-index": `${i}` });
-//         } else {
-//             // If page is flipped backward
-//             $(`.flip-book>#p${i}`).css({ "transform": "" });
+  // Flip pages by changing CSS
+  for (let i = 1; i < numSets + 1; i++) {
+    $(`#c${i}`).change(function () {
+      // If page is flipped forward
+      if (this.checked) {
 
-//             // Reset z-index of that specific page
-//             $(`#p${i}`).css({ "z-index": `${(numSheets + 1) - i}` });
-//         }
-//     });
-// }
+        $(`#c${i}:checked~.flip-book>#p${i}`).css({ "transform": "rotateY(-180deg)", "z-index": `${i}` });
 
+        // Hide the front page underneath
+        setTimeout(() => {
+          $(`#p${i}>.front`).css({ "display": "none" });
+        }, 1000);
+
+
+      } else {
+        // If page is flipped backward
+        $(`.flip-book>#p${i}`).css({ "transform": "" });
+        // Reset z-index of that specific page
+        $(`#p${i}`).css({ "z-index": `${(numSets + 1) - i}` });
+
+        // Reshow the hidden front page underneath
+        $(`#p${i}>.front`).css({ "display": "block" });
+      }
+    });
+  } //flip pages end
+} // handlePageFlipping() end
 
 
 /********************************
