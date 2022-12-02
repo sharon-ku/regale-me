@@ -445,38 +445,6 @@ function setup() {
   } // fillUpLastPage end
 
 
-
-  // -----------------
-  // * Fill up last page
-  // -----------------/
-  // Else if it's the last page, add prompt plus input field
-  function fillUpLastPage(j, prompt) {
-
-    // If it's an even-number page
-    if (j % 2 == 0) {
-      let setNumber = (j / 2) + 1;
-
-      // Add input form
-      addInputForm(setNumber, `front`, prompt);
-
-      console.log(`added last page even: p${j - 2}`);
-
-    } else {
-      let setNumber = (j / 2) + 0.5;
-      // Put on back page (odd-number page)
-
-      // Add input form
-      addInputForm(setNumber, `back`, prompt);
-
-      // Add back button
-      $(`#p${setNumber}>div.back`).append(`
-        <label for="c${setNumber}" class="back-btn">Back</label>
-      `);
-
-      console.log(`added last page odd: p${j - 2}`);
-    } // else odd page end
-  } // fillUpLastPage end
-
   // -----------------
   // * Add input form
   // -----------------/
