@@ -336,7 +336,7 @@ function setup() {
 
     // Update all page z index
     let highestCheckboxChecked = findHighestSetNumberWithChecked()
-    for (let i = setNumber - 1; i > highestCheckboxChecked; i--) {
+    for (let i = setNumber; i > highestCheckboxChecked; i--) {
       $(`#p${i}`).css({ "z-index": `${(numSets + 1) - i}` });
 
       console.log(`updated p${i}`);
