@@ -332,9 +332,17 @@ function setup() {
       console.log(`latestSetNumber IS ` + numSets);
     }
 
-
-
     console.log(`latestPageSide=` + latestPageSide);
+
+    // Update all page z index
+    let highestCheckboxChecked = findHighestSetNumberWithChecked()
+    for (let i = setNumber - 1; i > highestCheckboxChecked; i--) {
+      $(`#p${i}`).css({ "z-index": `${(numSets + 1) - i}` });
+
+      console.log(`updated p${i}`);
+    }
+
+
 
 
     // Add message on latest page
@@ -509,8 +517,7 @@ function setup() {
 
     // hide message form
     $(`#message-form`).hide();
-
-    console.log(`message form hidden`);
+    // console.log(`message form hidden`);
 
     // update latest page with new message
     updateLatestMessage();
@@ -536,6 +543,21 @@ function setup() {
 /********************************
  * HANDLE PAGE FLIPPING
  ********************************/
+
+// Find the highest #c that is checked
+function findHighestSetNumberWithChecked() {
+  let highestSetNumberWithChecked = 0;
+  for (let i = 1; i < numSets + 1; i++) {
+    // If a checkbox is checked, increase count
+    if ($(`#c${i}`).is(':checked')) {
+      highestSetNumberWithChecked++;
+
+      console.log(`highestSetNumber = ` + highestSetNumberWithChecked);
+    }
+  } // for-loop end
+
+  return highestSetNumberWithChecked;
+} // findHighest end
 
 function handleInitialPageFlipping() {
   // // calculate number of sheets/sets
