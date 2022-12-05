@@ -62,8 +62,13 @@ let totalPages;
 // number of sets in the book
 let numSets;
 
-// where the input values will be stored;
+// where the input values will be stored
 let inputText = {};
+
+// true if someone is currently editing the book
+let someoneIsCurrentlyEditing = false;
+// true if current client is writing
+let iAmTheAuthor = false;
 
 /* ----------------------------------------
 setup()
@@ -158,7 +163,8 @@ function setup() {
     nextButtonClicked();
     // // If the "Submit" button clicked:
     submitButtonClicked();
-
+    // Handle someone clicking input field
+    messageInputTextClicked();
 
     // --------------------------------
     // * HANDLE INITIAL PAGE FLIPPING
@@ -186,6 +192,26 @@ function setup() {
     // Request the user greenhouse positions to be found
     // clientSocket.emit("getUserPodPositions");
   }); //client socket newBooks end
+
+  /********************************
+   * PREVENT 2 PEOPLE FROM CONTINUING STORY AT THE SAME TIME
+  ********************************/
+  // Someone clicked on message input textarea: return true if clicked
+  function messageInputTextClicked() {
+
+    $(".messageInputText").focus(function () {
+      // If no one is currently editing the page
+      if (!someoneIsCurrentlyEditing) {
+        console.log(`message input clicked`);
+        someoneIsCurrentlyEditing = true;
+        iAmTheAuthor = true;
+        // Freeze everyone else's last page
+        clientSocket.emit(`freezeLastPageForNonWriters`);
+        console.log(`freezing last page for other writers`);
+      } // if end
+    }); //anonymous function end
+
+  } // messageInputTextClicked() end
 
 
   /********************************
@@ -234,6 +260,9 @@ function setup() {
 
       // If all forms are filled:
       else {
+        // finished editing
+        someoneIsCurrentlyEditing = false;
+
         // send message info to server
         sendMessageInformation();
 
@@ -261,6 +290,13 @@ function setup() {
     }); // submit-text-button click end
   } // submitButtonClicked() end
 
+  /********************************
+   * CLIENTSOCKET: FREEZE LAST PAGE FOR NON-WRITERS
+   ********************************/
+  clientSocket.on("freezeLastPage", function () {
+    let lastPage = totalPages;
+    blockLastPage(lastPage);
+  });
 
   /********************************
    * CLIENTSOCKET: RESET BUTTON CLICKS
@@ -318,8 +354,8 @@ function setup() {
 
       // add Next button
       $(`#p${setNumber}>div.${latestPageSide}`).append(`
-      <label for="c${setNumber}" class="next-btn">Next</label>
-    `);
+        <label for="c${setNumber}" class="next-btn">Next</label>
+      `);
     } else {
       latestPageSide = `back`;
       setNumber = (latestPage / 2) + 0.5;
@@ -335,7 +371,7 @@ function setup() {
     console.log(`latestPageSide=` + latestPageSide);
 
     // Update all page z index
-    let highestCheckboxChecked = findHighestSetNumberWithChecked()
+    let highestCheckboxChecked = findHighestSetNumberWithChecked();
     for (let i = setNumber; i > highestCheckboxChecked; i--) {
       $(`#p${i}`).css({ "z-index": `${(numSets + 1) - i}` });
 
@@ -472,6 +508,51 @@ function setup() {
   }
 
   // -----------------
+  // * Block last page (if someone is already editing it)
+  // -----------------/
+  function blockLastPage(j) {
+
+    let freezeMessage = `A fellow writer is editing this page right now. Please work on this puzzle while they finish their masterpiece.`;
+
+    // If it's an even-number page
+    if (j % 2 == 0) {
+      let setNumber = (j / 2);
+
+      // // Empty current page
+      // $(`#p${setNumber}`).empty();
+
+      // $(".messageInputText").focus(function () {
+      //   console.log(`message input clicked`);
+      //   alert("A fellow writer is editing this page right now. Please work on this puzzle while they finish their masterpiece.");
+      // });
+
+      $("#message-form").hide();
+
+      $(`#p${setNumber}>div.back`).append(`
+        <div class="freeze-message-box">
+          <p class="freeze-message">${freezeMessage}</p>
+        </div>
+      `);
+
+      console.log(`BLOCKED last page front: p${j - 2}`);
+
+    } else {
+      // Put on back page (odd-number page)
+      let setNumber = (j / 2) + 0.5;
+
+      $("#message-form").hide();
+
+      $(`#p${setNumber}>div.front`).append(`
+        <div class="freeze-message-box">
+          <p class="freeze-message">${freezeMessage}</p>
+        </div>
+      `);
+
+      console.log(`BLOCKED last page back: p${j - 2}`);
+    } // else odd page end
+  } // blockLastPage end
+
+  // -----------------
   // * Send message information
   // -----------------/
   function sendMessageInformation() {
@@ -510,6 +591,9 @@ function setup() {
   // display books from database
   clientSocket.on("updateBooks", function (firstBook, newMessage, newPrompt) {
     console.log(`updated the book`);
+
+    // Remove freeze message box if it's shown:
+    $(`.freeze-message-box`).remove();
 
     // Log inputText from server:
     inputText.messageInputText = newMessage;

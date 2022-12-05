@@ -187,6 +187,13 @@ function newConnection(socket) {
   }); //socket on sendMessage
 
 
+
+  // Freeze last page for non-writers (aka non-sender)
+  socket.on("freezeLastPageForNonWriters", function (data) {
+    socket.broadcast.emit("freezeLastPage");
+  });
+
+
 } //newConnection end
 
 
