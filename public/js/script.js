@@ -159,12 +159,8 @@ function setup() {
     // --------------------------------
     // * HANDLE BUTTON CLICKS
     // --------------------------------/
-    // // If the "Next" button is clicked:
-    nextButtonClicked();
-    // // If the "Submit" button clicked:
-    submitButtonClicked();
-    // Handle someone clicking input field
-    messageInputTextClicked();
+    // Set functionality for buttons
+    handleButtonClicks();
 
     // --------------------------------
     // * HANDLE INITIAL PAGE FLIPPING
@@ -301,13 +297,20 @@ function setup() {
   /********************************
    * CLIENTSOCKET: RESET BUTTON CLICKS
    ********************************/
-
-  // display books from database
-  clientSocket.on("resetButtonClicks", function () {
+  // Set functionality of buttons
+  function handleButtonClicks() {
     // "Next" button clicked:
     nextButtonClicked();
     // "Submit" button clicked:
     submitButtonClicked();
+    // Handle someone clicking input field
+    messageInputTextClicked();
+  }
+
+  // display books from database
+  clientSocket.on("resetButtonClicks", function () {
+    // Set functionality for buttons
+    handleButtonClicks();
 
     console.log(`button clicks reset`);
   }); //client socket resetButtonClicks end
@@ -510,46 +513,79 @@ function setup() {
   // -----------------
   // * Block last page (if someone is already editing it)
   // -----------------/
+
   function blockLastPage(j) {
 
     let freezeMessage = `A fellow writer is editing this page right now. Please work on this puzzle while they finish their masterpiece.`;
 
-    // If it's an even-number page
-    if (j % 2 == 0) {
-      let setNumber = (j / 2);
+    if (firstTimeUpdatingPage) {
+      // If it's an even-number page
+      if (j % 2 != 0) {
+        let setNumber = (j / 2) + 0.5;
+        console.log(`totalPages= ` + totalPages);
+        $("#message-form").hide();
 
-      // // Empty current page
-      // $(`#p${setNumber}`).empty();
-
-      // $(".messageInputText").focus(function () {
-      //   console.log(`message input clicked`);
-      //   alert("A fellow writer is editing this page right now. Please work on this puzzle while they finish their masterpiece.");
-      // });
-
-      $("#message-form").hide();
-
-      $(`#p${setNumber}>div.back`).append(`
+        $(`#p${setNumber}>div.front`).append(`
         <div class="freeze-message-box">
           <p class="freeze-message">${freezeMessage}</p>
         </div>
       `);
 
-      console.log(`BLOCKED last page front: p${j - 2}`);
+        console.log(`BLOCKED last page front: p${j - 2}`);
 
-    } else {
-      // Put on back page (odd-number page)
-      let setNumber = (j / 2) + 0.5;
+      } else {
+        // Put on back page (odd-number page)
+        let setNumber = (j / 2);
+        console.log(`totalPages= ` + totalPages);
 
-      $("#message-form").hide();
+        $("#message-form").hide();
 
-      $(`#p${setNumber}>div.front`).append(`
+        $(`#p${setNumber}>div.back`).append(`
         <div class="freeze-message-box">
           <p class="freeze-message">${freezeMessage}</p>
         </div>
       `);
 
-      console.log(`BLOCKED last page back: p${j - 2}`);
-    } // else odd page end
+        console.log(`BLOCKED last page back: p${j - 2}`);
+      } // else odd page end
+
+
+    } //if firstTimeUpdatingPage end
+
+    else {
+      // If it's an even-number page
+      if (j % 2 == 0) {
+        let setNumber = (j / 2) + 1;
+        console.log(`totalPages= ` + totalPages);
+
+
+        $("#message-form").hide();
+
+        $(`#p${setNumber}>div.front`).append(`
+        <div class="freeze-message-box">
+          <p class="freeze-message">${freezeMessage}</p>
+        </div>
+      `);
+
+        console.log(`BLOCKED last page front: p${j - 2}`);
+
+      } else {
+        // Put on back page (odd-number page)
+        let setNumber = (j / 2) + 0.5;
+        console.log(`totalPages= ` + totalPages);
+
+        $("#message-form").hide();
+
+        $(`#p${setNumber}>div.back`).append(`
+        <div class="freeze-message-box">
+          <p class="freeze-message">${freezeMessage}</p>
+        </div>
+      `);
+
+        console.log(`BLOCKED last page back: p${j - 2}`);
+      } // else odd page end
+    } // else end
+
   } // blockLastPage end
 
   // -----------------
