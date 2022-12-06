@@ -15,10 +15,11 @@ let running = false;
 // Create a PIXI canvas
 // For nice resolution on circle, source: https://stackoverflow.com/questions/41932258/how-do-i-antialias-graphics-circle-in-pixijs
 let app = new PIXI.Application({
-  transparent: false,
+  transparent: true,
   // width: 999, //640
   // height: 487, //360
-  backgroundColor: 0xC86637,
+  // backgroundColor: 0xC86637,
+
   width: window.innerWidth,
   height: window.innerHeight,
   autoResize: true,
@@ -206,6 +207,10 @@ function setup() {
         console.log(`freezing last page for other writers`);
       } // if end
     }); //anonymous function end
+
+    $(".messageInputText").focusout(function () {
+      console.log(`left textarea`);
+    });
 
   } // messageInputTextClicked() end
 
@@ -403,7 +408,7 @@ function setup() {
       <div class="front">
       <div id="cover-page"><img src="assets/images/page-cover.png" alt="cover page"></div>
       <p class="cover-title">${firstBook.title}</p>
-      <label for="c${setNumber}" class="next-btn">Next</label>
+      <label for="c${setNumber}" class="next-btn">> Begin <</label>
       </div>
     `);
   } //fillUpCoverPage() end
