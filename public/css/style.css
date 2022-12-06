@@ -247,13 +247,29 @@ p {
     bottom: 30px;
     right: 50px;
     cursor: pointer;
+    padding: 5px;
+
+    transition: all 0.5s;
 }
 
 /* Begin button */
 #p1 .next-btn {
     bottom: 70px;
-    right: 43%;
+    right: 37%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     color: white;
+    font-size: 1.2rem;
+
+    transition: all 0.5s;
+}
+
+#p1 .next-btn:hover {
+    font-style: italic;
+}
+
+.next-btn:hover,
+.back-btn:hover {
     font-size: 1.2rem;
 }
 
@@ -262,6 +278,9 @@ p {
     bottom: 30px;
     left: 50px;
     cursor: pointer;
+    padding: 5px;
+
+    transition: all 0.5s;
 }
 
 .cover-title {

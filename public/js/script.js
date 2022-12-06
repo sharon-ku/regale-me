@@ -21,10 +21,8 @@ let natureMusic = new Audio("assets/sounds/forgottenland.mp3");
 natureMusic.volume = 0.5;
 // Start soundtrack on click
 document.body.addEventListener(`click`, () => {
-  if (!alreadyPlayedOnce) {
-    natureMusic.play();
-    natureMusic.loop = true;
-  }
+  natureMusic.play();
+  natureMusic.loop = true;
 });
 
 
@@ -387,7 +385,7 @@ function setup() {
     $(`#p${setNumber}`).append(`
     <div class="front" id="cover-page">
     <p class="cover-title">${firstBook.title}</p>
-    <label for="c${setNumber}" class="next-btn">> Begin <</label>
+    <label for="c${setNumber}" class="next-btn">↬ Begin ↫</label>
     </div>
   `);
   } //fillUpCoverPage() end
@@ -500,7 +498,7 @@ function setup() {
 
   function blockLastPage(j) {
 
-    let freezeMessage = `A fellow writer is editing this page right now. Please work on this puzzle while they finish their masterpiece.`;
+    let freezeMessage = `A fellow writer is editing this page right now. Please wait until they finish their masterpiece.`;
 
     if (firstTimeUpdatingPage) {
       // If it's an even-number page
