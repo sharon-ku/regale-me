@@ -161,6 +161,12 @@ img {
     height: 600px;
     position: absolute;
     z-index: */
+
+    background-image: url("../assets/images/page-cover.png");
+    background-repeat: no-repeat;
+    /* background-size: cover; */
+    background-size: 100% 100%;
+
 }
 
 #back-cover {
@@ -203,6 +209,11 @@ p {
     /* even paler yellow */
     /* background: linear-gradient(90deg, #FFF6D9, #FFFCF2 20%); */
 
+    background-image: url("../assets/images/page-right.png");
+    background-repeat: no-repeat;
+    /* background-size: cover; */
+    background-size: 100% 100%;
+
     /* box-sizing: border-box; */
     /* padding: 0 20px; */
     box-shadow: inset 20px 0 50px rgba(0, 0, 0, 0.5) 0 2px 5px rgba(0, 0, 0, 0.5);
@@ -220,6 +231,13 @@ p {
     backface-visibility: hidden;
     /* yellowish color */
     /* background: linear-gradient(90deg, #FFFCF2, #FFF6D9 90%); */
+
+    background-image: url("../assets/images/page-left.png");
+    background-repeat: no-repeat;
+    /* background-size: cover; */
+    background-size: 100% 100%;
+
+
     /* padding: 0 20px; */
     color: #000;
 }
