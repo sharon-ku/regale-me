@@ -13,6 +13,22 @@ let socketId = -1;
 let running = false;
 
 /********************************
+ * BG MUSIC
+********************************/
+
+// Play bg music
+let natureMusic = new Audio("assets/sounds/forgottenland.mp3");
+natureMusic.volume = 0.5;
+// Start soundtrack on click
+document.body.addEventListener(`click`, () => {
+  if (!alreadyPlayedOnce) {
+    natureMusic.play();
+    natureMusic.loop = true;
+  }
+});
+
+
+/********************************
  * BOOK DOM SETUP
 ********************************/
 // total number of pages in a book
